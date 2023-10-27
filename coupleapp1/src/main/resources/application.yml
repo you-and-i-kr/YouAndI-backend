@@ -22,3 +22,10 @@ jwt:
 springdoc:
   swagger-ui:
     path: /api-doc.html
+
+# 로깅 레벨 설정
+logging:
+  level:
+    org.springframework.security: DEBUG
+  file:
+    name: /src/main/resources/myapp.log

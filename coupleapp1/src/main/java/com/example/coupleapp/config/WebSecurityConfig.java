@@ -25,7 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true) //@preAuthorized 활성화
+//@EnableGlobalMethodSecurity(prePostEnabled = true) //@preAuthorized 활성화
 public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;

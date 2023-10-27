@@ -80,13 +80,13 @@ public class MemberService {
             TokenDTO tokenDTO = jwtUtil.creatAllToken(member.getEmail(),member.getName());
 
             // Refresh Token 있는지 확인
-            Optional<RefreshTokenEntity> refreshToken = refreshTokenRepository.findByEmail(email);
+            Optional<RefreshTokenEntity> refreshToken = refreshTokenRepository.findByEmail(loginRequestDTO.getEmail());
 
             //  있다면 새 토큰 발급 후 업데이트 , 없다면 새로 만들고 디비 저장
             if (refreshToken.isPresent()) {
                 refreshTokenRepository.save(refreshToken.get().updateToken(tokenDTO.getRefreshToken()));
             } else {
-                RefreshTokenEntity newToken = new RefreshTokenEntity(tokenDTO.getRefreshToken(),email);
+                RefreshTokenEntity newToken = new RefreshTokenEntity(tokenDTO.getRefreshToken(), loginRequestDTO.getEmail());
                 refreshTokenRepository.save(newToken);
             }
             return tokenDTO;

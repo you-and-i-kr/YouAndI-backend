@@ -4,15 +4,19 @@ import com.example.coupleapp.dto.TokenDTO;
 import com.example.coupleapp.entity.RefreshTokenEntity;
 import com.example.coupleapp.repository.RefreshTokenRepository;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.image.Kernel;
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
 
@@ -39,29 +43,34 @@ public class JwtUtil {
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
+    @PostConstruct
+    public void init() {
+        byte[] bytes = Base64.getDecoder().decode(secretKey);
+        key = Keys.hmacShaKeyFor(bytes);
+    }
+
     public TokenDTO creatAllToken(String email, String userName) {
         return new TokenDTO(createToken(email,userName,"Access"),createToken(email,userName,"Refresh"));
     }
 
 
     // Token 생성
-    public String createToken(String email,String userName ,String type) {
+    public String createToken(String email, String userName, String type) {
         Date date = new Date();
         Claims claims = Jwts.claims();
-        claims.put("userName",userName);
+        claims.put("userName", userName);
 
-        long time = type.equals("Access") ? ACCESS_TIME:REFRESH_TIME;
+        long time = type.equals("Access") ? ACCESS_TIME : REFRESH_TIME;
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(email)// 사용자 식별값
-                        .claim(AUTHORIZATION_KEY,userName)
+                        .setSubject(email) // 사용자 식별값
+                        .claim(AUTHORIZATION_KEY, userName)
                         .setExpiration(new Date(date.getTime() + time))
                         .setIssuedAt(date) // 발급일
-                        .signWith(signatureAlgorithm, key)
+                        .signWith(key, signatureAlgorithm)
                         .compact();
     }
-
     // header 에서 JWT 가져오기
     public String getHeaderToken(HttpServletRequest request,String type) {
         String bearerToken = type.equals("Access") ? request.getHeader(ACCESS_TOKEN) : request.getHeader(REFRESH_TOKEN);

@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
+@Table(name = "album")
 public class AlbumEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

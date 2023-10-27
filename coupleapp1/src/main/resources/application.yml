@@ -1,18 +1,24 @@
-server:
-  port: 8080
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/couple?serverTimezone=Asia/Seoul # Replace 'your_database_name' with your actual database name
-    username: root
-    password: 4487
+    url: jdbc:mysql://${DB_HOST}:3306/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update  # You can use 'update' for development, 'create' for initial setup, or 'validate' for production
-    show-sql: true  # Set this to 'true' to see SQL statements in the console
-    database-platform: org.hibernate.dialect.MySQL5Dialect  # Specify the appropriate dialect for your MySQL versionspring:
-    mvc:
-      pathmatch:
-        matching-strategy: ant_path_matcher
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+  mvc:
+    path_match:
+      matching-strategy: ant_path_matcher
   profiles:
     active: development
+
+jwt:
+  secret: ${JWT_SECRET_KEY}
+
+springdoc:
+  swagger-ui:
+    path: /api-doc.html

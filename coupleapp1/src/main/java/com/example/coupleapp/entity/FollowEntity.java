@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 @Data
 @Entity
+@Table(name="follow")
 public class FollowEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

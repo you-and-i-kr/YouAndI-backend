@@ -1,16 +1,13 @@
 package com.example.coupleapp.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
+
 import lombok.Data;
 
 
 @Entity
 @Data
+@Table(name="home")
 public class HomeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

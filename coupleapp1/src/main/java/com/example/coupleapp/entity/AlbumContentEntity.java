@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 @Data
 @Entity
+@Table(name = "album_content")
 public class AlbumContentEntity {
     @Id
     private String contentId;

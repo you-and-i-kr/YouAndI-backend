@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 @Data
 @Entity
+@Table(name = "memo")
 public class MemoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

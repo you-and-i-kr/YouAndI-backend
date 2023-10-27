@@ -10,5 +10,11 @@ import java.util.List;
 public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     List<MemberEntity> findByEmail(String email);
 
+    boolean existsByEmail(String email);
+
+    boolean existsByName(String noteName);
+
+    MemberEntity findUserByEmail(String email);
+
     // Custom queries can be defined here if needed
 }

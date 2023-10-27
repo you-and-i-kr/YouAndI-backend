@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
+@Table(name = "calendar")
 public class CalendarEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

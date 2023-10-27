@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 @Data
 @Entity
+@Table(name = "notification")
 public class NotificationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

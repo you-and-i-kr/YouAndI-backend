@@ -1,12 +1,11 @@
 package com.example.coupleapp.service;
 
 import com.example.coupleapp.entity.MemberEntity;
-import com.example.coupleapp.exception.MemberErrorCode;
-import com.example.coupleapp.exception.MemberException;
+import com.example.coupleapp.exception.domian.MemberErrorCode;
+import com.example.coupleapp.exception.domian.MemberException;
 import com.example.coupleapp.repository.MemberDetailsImpl;
 import com.example.coupleapp.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

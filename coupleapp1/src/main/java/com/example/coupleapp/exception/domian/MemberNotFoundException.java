@@ -1,4 +1,4 @@
-package com.example.coupleapp.exception;
+package com.example.coupleapp.exception.domian;
 
 public class MemberNotFoundException extends RuntimeException {
     public MemberNotFoundException(String memberId) {

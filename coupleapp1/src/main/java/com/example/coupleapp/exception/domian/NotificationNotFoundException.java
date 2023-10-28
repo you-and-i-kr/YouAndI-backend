@@ -1,4 +1,4 @@
-package com.example.coupleapp.exception;
+package com.example.coupleapp.exception.domian;
 
 public class NotificationNotFoundException extends RuntimeException {
     public NotificationNotFoundException(Long message) {

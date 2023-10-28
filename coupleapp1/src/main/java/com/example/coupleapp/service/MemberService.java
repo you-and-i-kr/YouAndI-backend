@@ -7,16 +7,13 @@ import com.example.coupleapp.dto.MemberDTO;
 import com.example.coupleapp.dto.TokenDTO;
 import com.example.coupleapp.entity.MemberEntity;
 import com.example.coupleapp.entity.RefreshTokenEntity;
-import com.example.coupleapp.exception.MemberErrorCode;
-import com.example.coupleapp.exception.MemberException;
+import com.example.coupleapp.exception.domian.MemberErrorCode;
+import com.example.coupleapp.exception.domian.MemberException;
 import com.example.coupleapp.repository.MemberRepository;
 import com.example.coupleapp.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

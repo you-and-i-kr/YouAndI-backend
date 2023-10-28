@@ -1,4 +1,4 @@
-package com.example.coupleapp.exception;
+package com.example.coupleapp.exception.domian;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,11 +7,13 @@ import lombok.Setter;
 @Setter
 public class MemberException extends RuntimeException{
 
-    private MemberErrorCode errorCode;
+    private Integer errorCode;
     private String errorMessage;
 
+
     public MemberException(MemberErrorCode errorCode) {
-        this.errorCode = errorCode;
+        this.errorCode = errorCode.getStatus();
         this.errorMessage = errorCode.getDescription();
+
     }
 }

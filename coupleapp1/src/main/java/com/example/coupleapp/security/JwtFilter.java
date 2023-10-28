@@ -1,4 +1,4 @@
-package com.example.coupleapp.config;
+package com.example.coupleapp.security;
 
 import com.example.coupleapp.exception.domian.MemberErrorCode;
 import com.example.coupleapp.exception.domian.MemberException;
@@ -6,6 +6,7 @@ import com.example.coupleapp.service.MemberDetailServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -40,15 +41,18 @@ public class JwtFilter extends OncePerRequestFilter {
             if(jwtUtil.tokenValidation(accessToken)) {
                 Claims info = jwtUtil.getUserInfoFromToken(accessToken);
                 setAuthentication(info.getSubject());
+                Long memberId = Long.valueOf(info.getId());
+                AuthHolder.setMemberHolder(memberId);
             } else if(StringUtils.hasText(refreshToken)) {
                 boolean isRefreshToken = jwtUtil.refreshTokenValidation(refreshToken);
                 if (isRefreshToken) {
                     Claims info = jwtUtil.getUserInfoFromToken(refreshToken);
                     String userName = (String) info.get(JwtUtil.AUTHORIZATION_KEY);
-
-                    String newAccessToken = jwtUtil.createToken(info.getSubject(),userName,"Access");
+                    String newAccessToken = jwtUtil.createToken(info.getSubject(), Long.valueOf(info.getId()), "Access");
                     response.setHeader("ACCESS_TOKEN",newAccessToken);
                     setAuthentication(jwtUtil.getUserInfoFromToken(newAccessToken.substring(7)).getSubject());
+                    Long memberId = jwtUtil.getMemberId(newAccessToken);
+                    AuthHolder.setMemberHolder(memberId);
                 } else {
                     jwtExceptionHandler(response, "RefreshToken Expired", HttpStatus.BAD_REQUEST);
                     return;

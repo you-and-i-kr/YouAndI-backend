@@ -1,4 +1,4 @@
-package com.example.coupleapp.config;
+package com.example.coupleapp.security;
 
 import com.example.coupleapp.dto.TokenDTO;
 import com.example.coupleapp.entity.RefreshTokenEntity;
@@ -49,23 +49,22 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public TokenDTO creatAllToken(String email, String userName) {
-        return new TokenDTO(createToken(email,userName,"Access"),createToken(email,userName,"Refresh"));
+    public TokenDTO creatAllToken(String email, String userName,Long memberId) {
+        return new TokenDTO(createToken(email,memberId,"Access"),createToken(email,memberId,"Refresh"));
     }
 
 
     // Token 생성
-    public String createToken(String email, String userName, String type) {
+    public String createToken(String email,Long memberId, String type) {
         Date date = new Date();
-        Claims claims = Jwts.claims();
-        claims.put("userName", userName);
-
+        Claims claims = Jwts.claims()
+                .setSubject(email)
+                .setId(String.valueOf(memberId));
         long time = type.equals("Access") ? ACCESS_TIME : REFRESH_TIME;
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(email) // 사용자 식별값
-                        .claim(AUTHORIZATION_KEY, userName)
+                        .setClaims(claims)
                         .setExpiration(new Date(date.getTime() + time))
                         .setIssuedAt(date) // 발급일
                         .signWith(key, signatureAlgorithm)
@@ -113,5 +112,10 @@ public class JwtUtil {
         Optional<RefreshTokenEntity> refreshToken = refreshTokenRepository.findByEmail(info.getSubject());
 
         return refreshToken.isPresent() && token.equals(refreshToken.get().getRefreshToken().substring(7));
+    }
+
+    public Long getMemberId(String jwtToken) {
+        Claims claims = getUserInfoFromToken(jwtToken);
+        return Long.parseLong(claims.getSubject());
     }
 }

@@ -19,7 +19,8 @@ public enum MemberErrorCode {
     NOT_EQUL_PASSWORD("기존의 비밀번호와 일치하지 않습니다.",HttpStatus.BAD_REQUEST.value()),
 
     //status(HttpStatus.UNAUTHORIZED) 401
-    AUTHENTICATION_FAIL("인증에 실패하였습니다.",HttpStatus.UNAUTHORIZED.value());
+    AUTHENTICATION_FAIL("인증에 실패하였습니다.",HttpStatus.UNAUTHORIZED.value()),
+    INVALID_TOKEN("토큰이 유효하지 않습니다.",HttpStatus.UNAUTHORIZED.value());
 
     private final String description;
     private final Integer status;

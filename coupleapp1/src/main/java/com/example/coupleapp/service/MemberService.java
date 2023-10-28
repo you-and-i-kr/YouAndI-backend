@@ -1,6 +1,6 @@
 package com.example.coupleapp.service;
 
-import com.example.coupleapp.config.JwtUtil;
+import com.example.coupleapp.security.JwtUtil;
 
 import com.example.coupleapp.dto.LoginRequestDTO;
 import com.example.coupleapp.dto.MemberDTO;
@@ -74,7 +74,7 @@ public class MemberService {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // 아이디 정보로 Token 생성
-            TokenDTO tokenDTO = jwtUtil.creatAllToken(member.getEmail(),member.getName());
+            TokenDTO tokenDTO = jwtUtil.creatAllToken(member.getEmail(),member.getName(),member.getMember_id());
 
             // Refresh Token 있는지 확인
             Optional<RefreshTokenEntity> refreshToken = refreshTokenRepository.findByEmail(loginRequestDTO.getEmail());

@@ -5,14 +5,20 @@ import com.example.coupleapp.security.JwtUtil;
 import com.example.coupleapp.dto.LoginRequestDTO;
 import com.example.coupleapp.dto.MemberDTO;
 import com.example.coupleapp.dto.TokenDTO;
+import com.example.coupleapp.service.S3ImageService;
 import com.example.coupleapp.service.MemberService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 @Api(tags = "회원 관련 API")
 @Slf4j
@@ -20,7 +26,10 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/v2/api/members")
 public class MemberController {
+
     private final MemberService memberService;
+
+    private final S3ImageService s3ImageService;
 
     @ApiOperation(value = "회원가입")
     @PostMapping("/create")
@@ -38,9 +47,23 @@ public class MemberController {
         return ResponseEntity.ok().body(tokenDTO);
     }
 
+    @ApiOperation(value = "이미지리스트 업로드 테스트")
+    @PostMapping(value = "/images",consumes = "multipart/form-data")
+    public ResponseEntity<?> imagListTest(
+            @RequestPart(value = "imageFiles",required = false) List<MultipartFile> imageFiles) throws IOException {
+        return ResponseEntity.ok().body(s3ImageService.uploadImageFileList(imageFiles));
+    }
+
+    @ApiOperation(value = "이미지 업로드 테스트")
+    @PostMapping(value = "/image")
+    public ResponseEntity<?> imgTest(
+            @RequestPart(value = "imageFile",required = false) MultipartFile imageFile) throws IOException {
+        return ResponseEntity.ok().body(s3ImageService.uploadImageFile(imageFile));
+    }
+
+
     @GetMapping
     public ResponseEntity<?> test() {
         return ResponseEntity.ok().body("로그인한 유저의 식별값입니다.  = " + AuthHolder.getMemberId());
     }
 }
-

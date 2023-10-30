@@ -4,14 +4,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -26,14 +31,14 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final MemberDetailServiceImpl memberDetailService;
     private static final String[] PERMIT_URL_ARRAY = {
-            "/swagger-ui.html", "/v2/api-docs", "/configuration/ui",
+            "/swagger-ui.html", "/configuration/ui","/swagger-ui.html/**","swagger-ui.html",
             "/configuration/security", "/swagger-resources", "/webjars/**",
-            "/v2/api/members/create", "/v2/api/members/login","/v2/api-docs","/swagger/**","/swagger-resources/**"
+            "/v2/api/members/create", "/v2/api/members/login","/v2/api-docs","/swagger-resources/**"
     };
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // CSRF 설정
-        http.csrf((csrf) -> csrf.disable());
+        http.csrf(AbstractHttpConfigurer::disable);
 
         // CORS 설정 추가
         http.cors();
@@ -47,12 +52,17 @@ public class WebSecurityConfig {
                 authorizeHttpRequests
                         .antMatchers(PERMIT_URL_ARRAY).permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
-        );
+
+                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                );
         // 필터 관리
         http.addFilterBefore(new JwtFilter(jwtUtil,memberDetailService),UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

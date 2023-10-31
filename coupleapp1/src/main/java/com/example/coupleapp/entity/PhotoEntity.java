@@ -1,24 +1,23 @@
 package com.example.coupleapp.entity;
 
-import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-@Data
+import lombok.*;
 
+@Data
 @Entity
-@Table(name = "memo")
-public class MemoEntity {
+@Table(name = "photo")
+public class PhotoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "memo_id")
-    private Long memoId;
+    private Long photoId;
 
-    @Column(name = "member_id")
-    private Long memberId;
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private MemberEntity member;
 
-    @Column(name = "memo_content")
-    private String memoContent;
+    @Column(name = "img_url")
+    private String imgUrl;
 
     @Column(name = "my_phone_number")
     private String myPhoneNumber;
@@ -26,7 +25,5 @@ public class MemoEntity {
     @Column(name = "your_phone_number")
     private String yourPhoneNumber;
 
-
+    // Getters and setters
 }
-
-

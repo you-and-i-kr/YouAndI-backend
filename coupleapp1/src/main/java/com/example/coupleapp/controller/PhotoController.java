@@ -1,6 +1,8 @@
 package com.example.coupleapp.controller;
 
 import com.example.coupleapp.dto.PhotoDTO;
+import com.example.coupleapp.entity.MemberEntity;
+import com.example.coupleapp.security.AuthHolder;
 import com.example.coupleapp.service.PhotoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,11 +28,10 @@ public class PhotoController {
     @PostMapping
     @ApiOperation(value = "새로운 사진을 Amazon S3에 업로드하고 메타데이터 저장")
     public ResponseEntity<PhotoDTO> uploadPhoto(
-            @ApiParam(value = "사진 파일", required = true) @RequestParam("file") MultipartFile file,
-            @ApiParam(value = "전화번호", required = true) @RequestParam("myPhoneNumber") String myPhoneNumber,
-            @ApiParam(value = "전화번호", required = true) @RequestParam("yourPhoneNumber") String yourPhoneNumber) {
+            @ApiParam(value = "사진 파일", required = true) @RequestParam("file") MultipartFile file) {
         // PhotoService에서 사진 업로드 및 저장 로직 구현
-        PhotoDTO uploadedPhoto = photoService.uploadPhoto(file, myPhoneNumber, yourPhoneNumber);
+        Long memberId = AuthHolder.getMemberId();
+        PhotoDTO uploadedPhoto = photoService.uploadPhoto(file,memberId);
         return ResponseEntity.status(HttpStatus.CREATED).body(uploadedPhoto);
     }
 

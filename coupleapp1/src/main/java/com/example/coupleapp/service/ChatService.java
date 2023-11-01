@@ -48,7 +48,7 @@ public class ChatService {
         }
         ChatDTO chatDTO = new ChatDTO();
         chatDTO.setChatId(chatEntity.getChatId());
-        chatDTO.setMemberId(chatEntity.getMember().getMemberId());
+        chatDTO.setMemberId(chatEntity.getMember().getMember_id());
         chatDTO.setPartnerId(chatEntity.getPartnerId());
         chatDTO.setTimestamp(chatEntity.getTimestamp());
         chatDTO.setMessage(chatEntity.getMessage());

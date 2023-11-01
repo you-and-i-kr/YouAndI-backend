@@ -16,13 +16,21 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         this.queryFactory = new JPAQueryFactory(em);
 
     }
-
+    QMemberEntity qMemberEntity = QMemberEntity.memberEntity;
     @Override
     public MemberEntity findUserByEmail(String email) {
-        QMemberEntity qMemberEntity = QMemberEntity.memberEntity;
         return queryFactory
                 .selectFrom(qMemberEntity)
                 .where(qMemberEntity.email.eq(email))
                 .fetchFirst();
     }
+    @Override
+    public MemberEntity findMemberByMemberId(Long memberId) {
+        return queryFactory
+                .selectFrom(qMemberEntity)
+                .where(qMemberEntity.member_id.eq(memberId))
+                .fetchFirst();
+    }
+
+
 }

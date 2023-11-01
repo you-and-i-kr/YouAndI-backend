@@ -49,12 +49,4 @@ public class MemberEntity {
     @Column(name = "your_profile_image")
     private String your_profile_image;
 
-
-    public Long getMemberId() {
-        return member_id;
-    }
-
-    public void setMemberId(Long memberId) {
-        this.member_id = member_id;
-    }
 }

@@ -1,7 +1,9 @@
 package com.example.coupleapp.service;
 
 import com.example.coupleapp.dto.PhotoDTO;
+import com.example.coupleapp.entity.MemberEntity;
 import com.example.coupleapp.entity.PhotoEntity;
+import com.example.coupleapp.repository.MemberRepository;
 import com.example.coupleapp.repository.PhotoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,27 +12,32 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 @Service
 public class PhotoServiceImpl implements PhotoService {
 
     private final PhotoRepository photoRepository;
     private final S3ImageService s3ImageService;
+    private final MemberRepository memberRepository;
 
-    public PhotoServiceImpl(PhotoRepository photoRepository, S3ImageService s3ImageService) {
+    public PhotoServiceImpl(PhotoRepository photoRepository, S3ImageService s3ImageService, MemberRepository memberRepository) {
         this.photoRepository = photoRepository;
         this.s3ImageService = s3ImageService;
+        this.memberRepository = memberRepository;
     }
 
     @Override
-    public PhotoDTO uploadPhoto(MultipartFile file, String myPhoneNumber, String yourPhoneNumber) {
+    public PhotoDTO uploadPhoto(MultipartFile file,Long memberId) {
         // Amazon S3에 이미지 업로드 및 URL 받아오는 로직 (s3ImageService를 사용)
         String imageUrl = s3ImageService.uploadImageFile(file);
-
         // 데이터베이스에 사진 메타데이터 저장
+        MemberEntity member = memberRepository.findMemberByMemberId(memberId);
+
         PhotoEntity photo = new PhotoEntity();
         photo.setImgUrl(imageUrl);
-        photo.setMyPhoneNumber(myPhoneNumber);
-        photo.setYourPhoneNumber(yourPhoneNumber);
+        photo.setMyPhoneNumber(member.getMy_phone_number());
+        photo.setYourPhoneNumber(member.getYour_phone_number());
+        photo.setMember(member);
         // 다른 필드 설정
         PhotoEntity savedPhoto = photoRepository.save(photo);
 

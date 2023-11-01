@@ -1,4 +1,6 @@
-package com.example.coupleapp.security;
+package com.example.coupleapp.config;
+import com.example.coupleapp.security.JwtFilter;
+import com.example.coupleapp.security.JwtUtil;
 import com.example.coupleapp.service.MemberDetailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +35,8 @@ public class WebSecurityConfig {
     private static final String[] PERMIT_URL_ARRAY = {
             "/swagger-ui.html", "/configuration/ui","/swagger-ui.html/**","swagger-ui.html",
             "/configuration/security", "/swagger-resources", "/webjars/**",
-            "/v2/api/members/create", "/v2/api/members/login","/v2/api-docs","/swagger-resources/**"
+            "/v2/api/members/create", "/v2/api/members/login","/v2/api-docs","/swagger-resources/**",
+            "/v2/api/**","/myHandler"
     };
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

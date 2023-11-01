@@ -8,17 +8,18 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
+public interface MemberRepository extends JpaRepository<MemberEntity, Long> , MemberRepositoryCustom {
     List<MemberEntity> findByEmail(String email);
 
     boolean existsByEmail(String email);
 
     MemberEntity existsByName(String note_name);
 
+
     MemberEntity findUserByEmail(String email);
 //    List<MemberEntity> findByMyPhoneNumber(String myPhoneNumber);
 //    List<MemberEntity> findByYourPhoneNumber(String yourPhoneNumber);
      void deleteById(Long memberId);
 
-    // Custom queries can be defined here if needed
+
 }

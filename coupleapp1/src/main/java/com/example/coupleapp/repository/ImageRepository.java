@@ -1,9 +1,10 @@
 package com.example.coupleapp.repository;
 
-import com.example.coupleapp.entity.SettingsEntity;
+import com.example.coupleapp.entity.ImageEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SettingsRepository extends JpaRepository<SettingsEntity, Long> {
+public interface ImageRepository extends JpaRepository<ImageEntity, Long> {
+
 }

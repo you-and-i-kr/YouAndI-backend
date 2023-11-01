@@ -14,9 +14,13 @@ public enum CommonErrorCode {
 
 
     // 409
-    FAIL_TO_SAVE("서버 측의 문제로 데이터 저장에 실패했습니다. 다시 한 번 시도해주세요",HttpStatus.CONFLICT.value());
+    FAIL_TO_SAVE("서버 측의 문제로 데이터 저장에 실패했습니다. 다시 한 번 시도해주세요",HttpStatus.CONFLICT.value()), NOT_FOUND_MEDIA_FILES("파일을 찾을 수 없다.",HttpStatus.CONFLICT.value());
     private final String description;
     private final Integer status;
 
 
+    public enum NOT_FOUND_MEDIA_FILES {
+
+
+    }
 }

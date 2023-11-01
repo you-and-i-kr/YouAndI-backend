@@ -9,11 +9,14 @@ import javax.persistence.*;
 public class SettingsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long settingId;
+    private String settingId;
 
-    @ManyToOne
+
     @JoinColumn(name = "member_id")
-    private MemberEntity member;
+    private Long memberId;
+
+    @Column
+    private String note_name;
 
     @Column
     private Long partnerId;

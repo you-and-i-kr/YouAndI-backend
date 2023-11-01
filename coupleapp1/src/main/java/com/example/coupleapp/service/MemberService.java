@@ -1,5 +1,6 @@
 package com.example.coupleapp.service;
 
+import com.example.coupleapp.repository.ImageRepository;
 import com.example.coupleapp.security.JwtUtil;
 
 import com.example.coupleapp.dto.LoginRequestDTO;
@@ -33,7 +34,6 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
-
 
     public String createMember(MemberDTO memberDTO) {
         // email 중복확인
@@ -89,4 +89,5 @@ public class MemberService {
             throw new MemberException(MemberErrorCode.LOGIN_FAIL);
         }
     }
+
 }

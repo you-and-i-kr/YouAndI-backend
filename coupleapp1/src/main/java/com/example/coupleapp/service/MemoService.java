@@ -1,10 +1,11 @@
 package com.example.coupleapp.service;
 
-import com.example.coupleapp.dto.MemoDTO;
 import com.example.coupleapp.entity.MemoEntity;
 import com.example.coupleapp.repository.MemoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MemoService {
@@ -15,57 +16,35 @@ public class MemoService {
         this.memoRepository = memoRepository;
     }
 
-    public MemoDTO getMemoById(Long memoId) {
-        MemoEntity memoEntity = memoRepository.findById(memoId).orElse(null);
-        return convertToDTO(memoEntity);
+    public List<MemoEntity> getMemosByMemberId(Long memberId) {
+        return memoRepository.findByMemberId(memberId);
     }
 
-    public MemoDTO createMemo(MemoDTO memoDTO) {
-        MemoEntity memoEntity = convertToEntity(memoDTO);
-        memoEntity = memoRepository.save(memoEntity);
-        return convertToDTO(memoEntity);
+    public List<MemoEntity> getMemosByMyPhoneNumber(String myPhoneNumber) {
+        return memoRepository.findByMyPhoneNumber(myPhoneNumber);
     }
 
-    public MemoDTO updateMemo(Long memoId, MemoDTO memoDTO) {
-        MemoEntity existingMemoEntity = memoRepository.findById(memoId).orElse(null);
-        if (existingMemoEntity != null) {
-            updateEntityFromDTO(existingMemoEntity, memoDTO);
-            memoRepository.save(existingMemoEntity);
-            return convertToDTO(existingMemoEntity);
-        } else {
-            return null; // 업데이트할 항목을 찾지 못한 경우
-        }
+    public List<MemoEntity> getMemosByYourPhoneNumber(String yourPhoneNumber) {
+        return memoRepository.findByYourPhoneNumber(yourPhoneNumber);
+    }
+
+    public MemoEntity createMemo(MemoEntity memo) {
+        return memoRepository.save(memo);
     }
 
     public void deleteMemo(Long memoId) {
         memoRepository.deleteById(memoId);
     }
 
-    private MemoDTO convertToDTO(MemoEntity memoEntity) {
-        if (memoEntity == null) {
-            return null;
-        }
-        MemoDTO memoDTO = new MemoDTO();
-        memoDTO.setMemoId(memoEntity.getMemoId());
-        memoDTO.setMemoContent(memoEntity.getMemoContent());
-        memoDTO.setComment(memoEntity.getComment());
-        memoDTO.setCreatedAt(memoEntity.getCreatedAt());
-        return memoDTO;
-    }
+    // Update 메서드 추가
+    public MemoEntity updateMemo(Long memoId, MemoEntity updatedMemo) {
+        MemoEntity existingMemo = memoRepository.findById(memoId)
+                .orElseThrow(() -> new RuntimeException("메모를 찾을 수 없습니다."));
 
-    private MemoEntity convertToEntity(MemoDTO memoDTO) {
-        MemoEntity memoEntity = new MemoEntity();
-        memoEntity.setMemoId(memoDTO.getMemoId());
-        memoEntity.setMemoContent(memoDTO.getMemoContent());
-        memoEntity.setComment(memoDTO.getComment());
-        memoEntity.setCreatedAt(memoDTO.getCreatedAt());
-        return memoEntity;
-    }
+        // 업데이트할 필드 설정
+        existingMemo.setMemoContent(updatedMemo.getMemoContent());
+        // 다른 필드 업데이트
 
-    private void updateEntityFromDTO(MemoEntity existingEntity, MemoDTO memoDTO) {
-        existingEntity.setMemoContent(memoDTO.getMemoContent());
-        existingEntity.setComment(memoDTO.getComment());
-        existingEntity.setCreatedAt(memoDTO.getCreatedAt());
-        // 다른 필드도 필요한 경우 업데이트
+        return memoRepository.save(existingMemo);
     }
 }

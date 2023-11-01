@@ -35,7 +35,7 @@ public class MemberEntity {
     private String start_date;
 
     @Column(name = "note_name")
-    private String name;
+    private String  name;
 
     @Column(name = "created_at")
     private Timestamp created_at;

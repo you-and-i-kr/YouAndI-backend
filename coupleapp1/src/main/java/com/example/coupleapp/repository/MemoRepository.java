@@ -8,7 +8,8 @@ import java.util.List;
 
 @Repository
 public interface MemoRepository extends JpaRepository<MemoEntity, Long> {
-    List<MemoEntity> findByMemberId(Long memberId);
+    List<MemoEntity> findMemoByMemberId(Long memberId);
+    List<MemoEntity> findByMemoContent(String memoContent);
     List<MemoEntity> findByMyPhoneNumber(String myPhoneNumber);
     List<MemoEntity> findByYourPhoneNumber(String yourPhoneNumber);
 }

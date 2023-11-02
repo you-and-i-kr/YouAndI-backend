@@ -6,8 +6,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface MediaService {
-    MediaDTO uploadMedia(MultipartFile file, String myPhoneNumber, String yourPhoneNumber);
-    List<MediaDTO> getAllMedia();
+    MediaDTO uploadMedia(MultipartFile file,long memberId);
+
+    MediaDTO uploadMedia(MultipartFile file, Long memberId);
+
+    //    List<MediaDTO> getAllMedia();
     MediaDTO getMediaById(Long mediaId);
     MediaDTO updateMedia(Long mediaId, MediaDTO updatedMediaDTO);
 

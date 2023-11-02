@@ -43,13 +43,13 @@ public class PhotoServiceImpl implements PhotoService {
 
         return convertToDTO(savedPhoto);
     }
-
-    @Override
-    public List<PhotoDTO> getAllPhotos() {
-        // 데이터베이스에서 모든 사진 목록 가져오는 로직 (photoRepository 사용)
-        List<PhotoEntity> photos = photoRepository.findAll();
-        return photos.stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
+//
+//    @Override
+//    public List<PhotoDTO> getAllPhotos() {
+//        // 데이터베이스에서 모든 사진 목록 가져오는 로직 (photoRepository 사용)
+//        List<PhotoEntity> photos = photoRepository.findAll();
+//        return photos.stream().map(this::convertToDTO).collect(Collectors.toList());
+//    }
 
     @Override
     public PhotoDTO getPhotoById(Long photoId) {

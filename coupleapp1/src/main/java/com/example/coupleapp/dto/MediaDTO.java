@@ -5,9 +5,9 @@ import lombok.*;
 @Data
 public class MediaDTO {
     private Long mediaId;
-    private String imgUrl;
-    private String myPhoneNumber;
-    private String yourPhoneNumber;
-
+    private String mediaUrl;
+//    private String myPhoneNumber;
+//    private String yourPhoneNumber;
+//
 
 }

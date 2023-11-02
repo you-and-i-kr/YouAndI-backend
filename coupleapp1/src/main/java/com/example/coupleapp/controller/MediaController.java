@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.coupleapp.dto.MediaDTO;
 import com.example.coupleapp.exception.domian.CommonErrorCode;
 import com.example.coupleapp.exception.domian.CommonException;
+import com.example.coupleapp.security.AuthHolder;
 import com.example.coupleapp.service.MediaService;
 import com.example.coupleapp.service.S3mediaService;
 import io.swagger.annotations.Api;
@@ -35,21 +36,21 @@ public class MediaController {
     @PostMapping
     @ApiOperation(value = "새로운 미디어를 Amazon S3에 업로드하고 메타데이터 저장")
     public ResponseEntity<MediaDTO> uploadMedia(
-            @ApiParam(value = "미디어 파일", required = true) @RequestParam("file") MultipartFile file,
-            @ApiParam(value = "전화번호", required = true) @RequestParam("myPhoneNumber") String myPhoneNumber,
-            @ApiParam(value = "전화번호", required = true) @RequestParam("yourPhoneNumber") String yourPhoneNumber) {
+            @ApiParam(value = "미디어 파일", required = true) @RequestParam("file") MultipartFile file)
+    {
         // MediaService에서 미디어 업로드 및 저장 로직 구현
-        MediaDTO uploadedMedia = mediaService.uploadMedia(file, myPhoneNumber, yourPhoneNumber);
-        return ResponseEntity.status(HttpStatus.CREATED).body(uploadedMedia);
+        Long memberId = AuthHolder.getMemberId();
+        MediaDTO uploadMedia = mediaService.uploadMedia(file,memberId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(uploadMedia);
     }
 
     // 모든 미디어 목록 가져오기
-    @GetMapping
-    @ApiOperation(value = "모든 미디어 목록 가져오기")
-    public ResponseEntity<List<MediaDTO>>getAllMedia() {
-        List<MediaDTO> mediaList = mediaService.getAllMedia();
-        return ResponseEntity.ok(mediaList);
-    }
+//    @GetMapping
+//    @ApiOperation(value = "모든 미디어 목록 가져오기")
+//    public ResponseEntity<List<MediaDTO>>getAllMedia() {
+//        List<MediaDTO> mediaList = mediaService.getAllMedia();
+//        return ResponseEntity.ok(mediaList);
+//    }
 
     // 특정 ID에 해당하는 미디어 가져오기
     @GetMapping("/{mediaId}")

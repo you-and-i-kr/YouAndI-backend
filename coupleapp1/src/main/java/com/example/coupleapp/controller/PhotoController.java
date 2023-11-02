@@ -34,14 +34,14 @@ public class PhotoController {
         PhotoDTO uploadedPhoto = photoService.uploadPhoto(file,memberId);
         return ResponseEntity.status(HttpStatus.CREATED).body(uploadedPhoto);
     }
-
-    // 모든 사진 목록 가져오기
-    @GetMapping
-    @ApiOperation(value = "모든 사진 목록 가져오기")
-    public ResponseEntity<List<PhotoDTO>> getAllPhotos() {
-        List<PhotoDTO> photos = photoService.getAllPhotos();
-        return ResponseEntity.ok(photos);
-    }
+//
+//    // 모든 사진 목록 가져오기
+//    @GetMapping
+//    @ApiOperation(value = "모든 사진 목록 가져오기")
+//    public ResponseEntity<List<PhotoDTO>> getAllPhotos() {
+//        List<PhotoDTO> photos = photoService.getAllPhotos();
+//        return ResponseEntity.ok(photos);
+//    }
 
     // 특정 ID에 해당하는 사진 가져오기
     @GetMapping("/{photoId}")

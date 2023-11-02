@@ -13,8 +13,8 @@ public class MediaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mediaId;
 
-    @Column(name = "img_url")
-    private String imgUrl;
+    @Column(name = "media_url")
+    private String mediaUrl;
 
     @Column(name = "my_phone_number")
     private String myPhoneNumber;

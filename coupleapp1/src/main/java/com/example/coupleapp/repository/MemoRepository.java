@@ -10,4 +10,8 @@ import java.util.Optional;
 public interface MemoRepository extends JpaRepository<MemoEntity, Long> {
 
     MemoEntity findByMemberIdAndMemoId(Long memberId, Long memoId);
+
+    MemoEntity findByMemberId(Long memoId);
+
+    MemoEntity findByMemoId(Long memoId);
 }

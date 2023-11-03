@@ -40,7 +40,7 @@ public class PhotoController {
 
     // 멤버 ID에 해당하는 사진 가져오기
     @GetMapping
-    @ApiOperation(value = "특정 ID에 해당하는 사진 가져오기")
+    @ApiOperation(value = "저장한 사진들 불러오기")
     public ResponseEntity<List<String>> getPhoto() {
         Long memberId = AuthHolder.getMemberId();
         List<String> photolist = photoService.getPhotoById(memberId);

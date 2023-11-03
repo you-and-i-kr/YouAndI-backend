@@ -22,7 +22,9 @@ public interface PhotoRepository extends JpaRepository<PhotoEntity, Long> {
     boolean existsByYourPhoneNumber(String your_phone_number);
     PhotoEntity findUserByPhotoId(Long photoId);
 
+    @Query("SELECT p.imgUrl FROM PhotoEntity p WHERE p.myPhoneNumber = :myPhoneNum OR p.myPhoneNumber = :yourPhoneNum")
+    List<String> findimglist(@Param("myPhoneNum") String myPhoneNum, @Param("yourPhoneNum") String yourPhoneNum);
 
-    @Query("SELECT p.imgUrl FROM PhotoEntity p WHERE p.member.member_id = :memberId")
-    List<String> findImageUrlsByMemberId(@Param("memberId") Long memberId);
+//    @Query("SELECT p.imgUrl FROM PhotoEntity p WHERE p.member.member_id = :memberId")
+//    List<String> findImageUrlsByMemberId(@Param("memberId") Long memberId);
 }

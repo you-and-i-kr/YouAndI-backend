@@ -70,7 +70,13 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public List<String> getPhotoById(Long memberId) {
-        return photoRepository.findImageUrlsByMemberId(memberId);
+        // member의 내번호와 맞는 데이터 + 내번호에 상대방번호가 넣어진 데이터들 불러오기
+        MemberEntity member = memberRepository.findMemberByMemberId(memberId);
+        // 내 번호
+        String myPhoneNum = member.getMy_phone_number();
+        // 상대방 번호
+        String yourPhoneNum = member.getYour_phone_number();
+        return photoRepository.findimglist(myPhoneNum,yourPhoneNum);
     }
 
     private PhotoResponseDTO convertToDTO(PhotoEntity photo) {

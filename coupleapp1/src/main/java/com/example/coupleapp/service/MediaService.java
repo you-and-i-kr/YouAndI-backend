@@ -12,7 +12,7 @@ public interface MediaService {
     MediaDTO uploadMedia(MultipartFile file, Long memberId);
 
     //    List<MediaDTO> getAllMedia();
-    MediaDTO getMediaById(Long mediaId);
+    List<String> getMedias(Long mediaId);
     MediaDTO updateMedia(Long mediaId, MediaDTO updatedMediaDTO);
 
 

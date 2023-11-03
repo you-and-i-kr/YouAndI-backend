@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/media")
@@ -39,12 +41,11 @@ public class MediaController {
 
 
     // 특정 ID에 해당하는 미디어 가져오기
-    @GetMapping("/{mediaId}")
-    @ApiOperation(value = "특정 ID에 해당하는 미디어 가져오기")
-    public ResponseEntity<MediaDTO> getMedia(
-            @ApiParam(value = "미디어 ID", required = true) @PathVariable Long mediaId) {
-        MediaDTO media = mediaService.getMediaById(mediaId);
-        return ResponseEntity.ok(media);
+    @GetMapping()
+    @ApiOperation(value = "저장한 영상들 불러오기")
+    public ResponseEntity<List<String>> getMedias(){
+        Long memberId = AuthHolder.getMemberId();
+        return ResponseEntity.ok(mediaService.getMedias(memberId));
     }
 
     // 미디어 메타데이터 업데이트

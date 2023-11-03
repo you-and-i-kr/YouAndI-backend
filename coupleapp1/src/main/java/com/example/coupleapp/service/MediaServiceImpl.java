@@ -15,8 +15,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.attribute.standard.Media;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MediaServiceImpl implements MediaService {
@@ -66,13 +69,14 @@ public class MediaServiceImpl implements MediaService {
 //    }
 
     @Override
-    public MediaDTO getMediaById(Long mediaId) {
-        // 특정 ID에 해당하는 미디어를 데이터베이스에서 가져오는 로직 (mediaRepository 사용)
-        MediaEntity mediaEntity = mediaRepository.findById(mediaId).orElse(null);
-        if (mediaEntity != null) {
-            return convertEntityToDTO(mediaEntity);
-        }
-        return null;
+    public List<String> getMedias(Long memberId) {
+        // member의 내번호와 맞는 데이터 + 내번호에 상대방번호가 넣어진 데이터들 불러오기
+        MemberEntity member = memberRepository.findMemberByMemberId(memberId);
+        // 내 번호
+        String myPhoneNum = member.getMy_phone_number();
+        // 상대방 번호
+        String yourPhoneNum = member.getYour_phone_number();
+        return mediaRepository.findMedialist(myPhoneNum,yourPhoneNum);
     }
 
     @Override

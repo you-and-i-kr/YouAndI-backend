@@ -1,6 +1,7 @@
 package com.example.coupleapp.controller;
 
 import com.example.coupleapp.dto.MemoDTO;
+import com.example.coupleapp.dto.MemoResponseDTO;
 import com.example.coupleapp.entity.MemoEntity;
 import com.example.coupleapp.security.AuthHolder;
 import com.example.coupleapp.service.MemoService;
@@ -25,10 +26,10 @@ public class MemoController {
     // 새로운 메모 생성
     @PostMapping
     @ApiOperation(value = "새로운 메모 생성")
-    public ResponseEntity<MemoEntity> createMemo(
+    public ResponseEntity<MemoResponseDTO> createMemo(
             @ApiParam(value = "메모 데이터", required = true) @RequestBody MemoDTO memoDTO) {
         Long memberId = AuthHolder.getMemberId();
-        MemoEntity createdMemo = memoService.createMemo(memoDTO,memberId);
+        MemoResponseDTO createdMemo = memoService.createMemo(memoDTO,memberId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMemo);
     }
 

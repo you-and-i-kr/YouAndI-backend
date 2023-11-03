@@ -6,6 +6,8 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.example.coupleapp.dto.MediaDTO;
 import com.example.coupleapp.entity.MediaEntity;
 import com.example.coupleapp.entity.MemberEntity;
+import com.example.coupleapp.exception.domian.MediaErrorCode;
+import com.example.coupleapp.exception.domian.MediaException;
 import com.example.coupleapp.repository.MediaRepository;
 import com.example.coupleapp.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,20 +77,19 @@ public class MediaServiceImpl implements MediaService {
 
     @Override
     public MediaDTO updateMedia(Long mediaId, MediaDTO updatedMediaDTO) {
-        // 특정 ID에 해당하는 미디어를 업데이트하는 로직 (mediaRepository 사용)
-        MediaEntity mediaEntity = mediaRepository.findById(mediaId).orElse(null);
-        if (mediaEntity != null) {
-            // 업데이트할 필드 설정
-//            mediaEntity.setMyPhoneNumber(updatedMediaDTO.getMyPhoneNumber());
-//            mediaEntity.setYourPhoneNumber(updatedMediaDTO.getYourPhoneNumber());
-
-            // 데이터베이스에 업데이트된 엔티티 저장
-            MediaEntity updatedMedia = mediaRepository.save(mediaEntity);
-
-            return convertEntityToDTO(updatedMedia);
-        }
         return null;
     }
+
+    @Override
+    public MediaEntity updateMedia(Long mediaId, MultipartFile file) {
+        // 특정 ID에 해당하는 미디어를 업데이트하는 로직 (mediaRepository 사용)
+        MediaEntity existingMedia = mediaRepository.findById(mediaId)
+                .orElseThrow(()-> new MediaException(MediaErrorCode.FAIL_UPDATE));
+        existingMedia.setMediaUrl(existingMedia.getMediaUrl());
+        // Save the updated memoEntity in the repository
+        return mediaRepository.save(existingMedia);
+    }
+
 
     @Override
     public void deleteMedia(Long mediaId) {

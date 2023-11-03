@@ -10,5 +10,8 @@ public interface PhotoService {
 //    List<PhotoDTO> getAllPhotos();
     PhotoDTO getPhotoById(Long photoId);
     PhotoDTO updatePhoto(Long photoId, PhotoDTO updatedPhotoDTO);
+
+    PhotoEntity updatePhoto(Long photoId, MultipartFile file);
+
     void deletePhoto(Long photoId);
 }

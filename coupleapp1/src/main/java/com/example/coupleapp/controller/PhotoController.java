@@ -2,6 +2,7 @@ package com.example.coupleapp.controller;
 
 import com.example.coupleapp.dto.PhotoDTO;
 import com.example.coupleapp.entity.MemberEntity;
+import com.example.coupleapp.entity.PhotoEntity;
 import com.example.coupleapp.security.AuthHolder;
 import com.example.coupleapp.service.PhotoService;
 import io.swagger.annotations.Api;
@@ -34,14 +35,7 @@ public class PhotoController {
         PhotoDTO uploadedPhoto = photoService.uploadPhoto(file,memberId);
         return ResponseEntity.status(HttpStatus.CREATED).body(uploadedPhoto);
     }
-//
-//    // 모든 사진 목록 가져오기
-//    @GetMapping
-//    @ApiOperation(value = "모든 사진 목록 가져오기")
-//    public ResponseEntity<List<PhotoDTO>> getAllPhotos() {
-//        List<PhotoDTO> photos = photoService.getAllPhotos();
-//        return ResponseEntity.ok(photos);
-//    }
+
 
     // 특정 ID에 해당하는 사진 가져오기
     @GetMapping("/{photoId}")
@@ -55,10 +49,10 @@ public class PhotoController {
     // 사진 메타데이터 업데이트
     @PutMapping("/{photoId}")
     @ApiOperation(value = "사진 메타데이터 업데이트")
-    public ResponseEntity<PhotoDTO> updatePhoto(
+    public ResponseEntity<PhotoEntity> updatePhoto(
             @ApiParam(value = "사진 ID", required = true) @PathVariable Long photoId,
-            @ApiParam(value = "업데이트된 사진 정보", required = true) @RequestBody PhotoDTO updatedPhotoDTO) {
-        PhotoDTO updatedPhoto = photoService.updatePhoto(photoId, updatedPhotoDTO);
+            @ApiParam(value = "사진 파일", required = true) @RequestParam("file") MultipartFile file) {
+        PhotoEntity updatedPhoto = photoService.updatePhoto(photoId, file);
         return ResponseEntity.ok(updatedPhoto);
     }
 

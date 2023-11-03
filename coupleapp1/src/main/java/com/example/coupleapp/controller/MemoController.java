@@ -31,32 +31,24 @@ public class MemoController {
         MemoDTO createdMemo = memoService.createMemo(memoDTO,memberId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMemo);
     }
-//
-//    // 모든 메모 목록 가져오기
-//    @GetMapping
-//    @ApiOperation(value = "모든 메모 목록 가져오기")
-//    public ResponseEntity<List<MemoDTO>> getAllMemos() {
-//        List<MemoDTO> memos = memoService.getAllMemos();
-//        return ResponseEntity.ok(memos);
-//    }
 
     // 특정 ID에 해당하는 메모 가져오기
     @GetMapping("/{memoId}")
     @ApiOperation(value = "특정 ID에 해당하는 메모 가져오기")
-    public ResponseEntity<MemoDTO> getMemo(
-            @ApiParam(value = "메모 ID", required = true) @PathVariable Long memoid) {
-//        Long memberId = AuthHolder.getMemberId();
-        MemoDTO memo = memoService.getMemoById(memoid);
+    public ResponseEntity<MemoEntity> getMemo(
+            @ApiParam(value = "메모 ID", required = true) @PathVariable Long memoId) {
+        Long memberId = AuthHolder.getMemberId();
+        MemoEntity memo = memoService.getMemo( memberId, memoId);
         return ResponseEntity.ok(memo);
     }
 
     // 메모 업데이트
     @PutMapping("/{memoId}")
     @ApiOperation(value = "메모 업데이트")
-    public ResponseEntity<MemoDTO> updateMemo(
+    public ResponseEntity<MemoEntity> updateMemo(
             @ApiParam(value = "메모 ID", required = true) @PathVariable Long memoId,
-            @ApiParam(value = "업데이트된 메모 정보", required = true) @RequestBody MemoDTO updatedMemoDTO) {
-        MemoDTO updatedMemo = memoService.updateMemo(memoId, updatedMemoDTO);
+            @ApiParam(value = "업데이트된 메모 정보", required = true) @RequestBody String memoContent) {
+        MemoEntity updatedMemo = memoService.updateMemo(memoId, memoContent);
         return ResponseEntity.ok(updatedMemo);
     }
 

@@ -1,6 +1,7 @@
 package com.example.coupleapp.service;
 
 import com.example.coupleapp.dto.MemoDTO;
+import com.example.coupleapp.dto.MemoResponseDTO;
 import com.example.coupleapp.entity.MemberEntity;
 import com.example.coupleapp.entity.MemoEntity;
 import com.example.coupleapp.entity.PhotoEntity;
@@ -23,14 +24,21 @@ public class MemoService {
 
     private final MemoRepository memoRepository;
     private final MemberRepository memberRepository;
-    public MemoEntity createMemo(MemoDTO memoDTO,Long memberId) {
+    public MemoResponseDTO createMemo(MemoDTO memoDTO, Long memberId) {
+
         MemberEntity member = memberRepository.findMemberByMemberId(memberId);
+
         MemoEntity memoEntity = new MemoEntity();
         memoEntity.setMemberId(memberId);
         memoEntity.setMyPhoneNumber(member.getMy_phone_number());
         memoEntity.setYourPhoneNumber(member.getYour_phone_number());
         memoEntity.setMemoContent(memoDTO.getMemoContent());
-        return  memoRepository.save(memoEntity);
+
+        MemoEntity saveMemo = memoRepository.save(memoEntity);
+        MemoResponseDTO memoResponseDTO = new MemoResponseDTO();
+        memoResponseDTO.setMemoContent(saveMemo.getMemoContent());
+        memoResponseDTO.setMemoId(saveMemo.getMemoId());
+        return memoResponseDTO;
     }
 
 

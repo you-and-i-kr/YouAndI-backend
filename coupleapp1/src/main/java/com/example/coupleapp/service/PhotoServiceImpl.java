@@ -1,6 +1,7 @@
 package com.example.coupleapp.service;
 
 import com.example.coupleapp.dto.PhotoDTO;
+import com.example.coupleapp.dto.PhotoResponseDTO;
 import com.example.coupleapp.entity.MemberEntity;
 import com.example.coupleapp.entity.PhotoEntity;
 import com.example.coupleapp.exception.domian.PhotoErrorCode;
@@ -10,6 +11,7 @@ import com.example.coupleapp.repository.PhotoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -27,11 +29,12 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public PhotoDTO uploadPhoto(MultipartFile file,Long memberId) {
+    public PhotoResponseDTO uploadPhoto(MultipartFile file, Long memberId) {
         // Amazon S3에 이미지 업로드 및 URL 받아오는 로직 (s3ImageService를 사용)
         String imageUrl = s3ImageService.uploadImageFile(file);
         // 데이터베이스에 사진 메타데이터 저장
         MemberEntity member = memberRepository.findMemberByMemberId(memberId);
+
 
         PhotoEntity photo = new PhotoEntity();
         photo.setImgUrl(imageUrl);
@@ -40,34 +43,15 @@ public class PhotoServiceImpl implements PhotoService {
         photo.setMember(member);
         // 다른 필드 설정
         PhotoEntity savedPhoto = photoRepository.save(photo);
+        PhotoResponseDTO responseDTO = new PhotoResponseDTO();
+        responseDTO.setPhotoId(savedPhoto.getPhotoId());
+        responseDTO.setImgUrl(savedPhoto.getImgUrl());
 
-        return convertToDTO(savedPhoto);
-    }
-//
-//    @Override
-//    public List<PhotoDTO> getAllPhotos() {
-//        // 데이터베이스에서 모든 사진 목록 가져오는 로직 (photoRepository 사용)
-//        List<PhotoEntity> photos = photoRepository.findAll();
-//        return photos.stream().map(this::convertToDTO).collect(Collectors.toList());
-//    }
-
-    @Override
-    public PhotoDTO getPhotoById(Long photoId) {
-        // 특정 ID에 해당하는 사진을 데이터베이스에서 가져오는 로직 (photoRepository 사용)
-        Optional<PhotoEntity> optionalPhoto = photoRepository.findById(photoId);
-        if (optionalPhoto.isPresent()) {
-            PhotoEntity photo = optionalPhoto.get();
-            return convertToDTO(photo);
-        } else {
-            // 적절한 예외 처리
-            return null;
-        }
+        return responseDTO;
     }
 
-    @Override
-    public PhotoDTO updatePhoto(Long photoId, PhotoDTO updatedPhotoDTO) {
-        return null;
-    }
+
+
 
     @Override
     public PhotoEntity updatePhoto(Long photoId, MultipartFile file) {
@@ -84,13 +68,18 @@ public class PhotoServiceImpl implements PhotoService {
         photoRepository.deleteById(photoId);
     }
 
-    private PhotoDTO convertToDTO(PhotoEntity photo) {
+    @Override
+    public List<String> getPhotoById(Long memberId) {
+        return photoRepository.findImageUrlsByMemberId(memberId);
+    }
+
+    private PhotoResponseDTO convertToDTO(PhotoEntity photo) {
         // Photo 엔티티를 PhotoDTO로 변환하는 로직
-        PhotoDTO photoDTO = new PhotoDTO();
+        PhotoResponseDTO photoDTO = new PhotoResponseDTO();
         photoDTO.setPhotoId(photo.getPhotoId());
         photoDTO.setImgUrl(photo.getImgUrl());
-        photoDTO.setMyPhoneNumber(photo.getMyPhoneNumber());
-        photoDTO.setYourPhoneNumber(photo.getYourPhoneNumber());
+//        photoDTO.setMyPhoneNumber(photo.getMyPhoneNumber());
+//        photoDTO.setYourPhoneNumber(photo.getYourPhoneNumber());
         // 다른 필드 설정
         return photoDTO;
     }

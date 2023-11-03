@@ -3,6 +3,8 @@ package com.example.coupleapp.repository;
 
 import com.example.coupleapp.entity.PhotoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,4 +21,8 @@ public interface PhotoRepository extends JpaRepository<PhotoEntity, Long> {
 
     boolean existsByYourPhoneNumber(String your_phone_number);
     PhotoEntity findUserByPhotoId(Long photoId);
+
+
+    @Query("SELECT p.imgUrl FROM PhotoEntity p WHERE p.member.member_id = :memberId")
+    List<String> findImageUrlsByMemberId(@Param("memberId") Long memberId);
 }

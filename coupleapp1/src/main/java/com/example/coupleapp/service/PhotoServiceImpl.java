@@ -3,14 +3,14 @@ package com.example.coupleapp.service;
 import com.example.coupleapp.dto.PhotoDTO;
 import com.example.coupleapp.entity.MemberEntity;
 import com.example.coupleapp.entity.PhotoEntity;
+import com.example.coupleapp.exception.domian.PhotoErrorCode;
+import com.example.coupleapp.exception.domian.PhotoException;
 import com.example.coupleapp.repository.MemberRepository;
 import com.example.coupleapp.repository.PhotoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -66,18 +66,16 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public PhotoDTO updatePhoto(Long photoId, PhotoDTO updatedPhotoDTO) {
-        // 특정 ID에 해당하는 사진을 업데이트하는 로직 (photoRepository 사용)
-        Optional<PhotoEntity> optionalPhoto = photoRepository.findById(photoId);
-        if (optionalPhoto.isPresent()) {
-            PhotoEntity existingPhoto = optionalPhoto.get();
-            // 업데이트할 필드 설정
-            // 예: existingPhoto.setYourPhoneNumber(updatedPhotoDTO.getYourPhoneNumber());
-            PhotoEntity updatedPhoto = photoRepository.save(existingPhoto);
-            return convertToDTO(updatedPhoto);
-        } else {
-            // 적절한 예외 처리
-            return null;
-        }
+        return null;
+    }
+
+    @Override
+    public PhotoEntity updatePhoto(Long photoId, MultipartFile file) {
+        PhotoEntity existingPhoto = photoRepository.findById(photoId)
+                .orElseThrow(()-> new PhotoException(PhotoErrorCode.FAIL_UPDATE));
+        existingPhoto.setImgUrl(existingPhoto.getImgUrl());
+        // Save the updated memoEntity in the repository
+        return photoRepository.save(existingPhoto);
     }
 
     @Override

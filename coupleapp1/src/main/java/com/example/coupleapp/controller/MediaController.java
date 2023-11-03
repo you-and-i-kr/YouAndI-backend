@@ -1,11 +1,8 @@
 package com.example.coupleapp.controller;
 
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+
 import com.example.coupleapp.dto.MediaDTO;
-import com.example.coupleapp.exception.domian.CommonErrorCode;
-import com.example.coupleapp.exception.domian.CommonException;
+import com.example.coupleapp.entity.MediaEntity;
 import com.example.coupleapp.security.AuthHolder;
 import com.example.coupleapp.service.MediaService;
 import com.example.coupleapp.service.S3mediaService;
@@ -18,11 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/media")
@@ -44,13 +36,7 @@ public class MediaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(uploadMedia);
     }
 
-    // 모든 미디어 목록 가져오기
-//    @GetMapping
-//    @ApiOperation(value = "모든 미디어 목록 가져오기")
-//    public ResponseEntity<List<MediaDTO>>getAllMedia() {
-//        List<MediaDTO> mediaList = mediaService.getAllMedia();
-//        return ResponseEntity.ok(mediaList);
-//    }
+
 
     // 특정 ID에 해당하는 미디어 가져오기
     @GetMapping("/{mediaId}")
@@ -64,10 +50,10 @@ public class MediaController {
     // 미디어 메타데이터 업데이트
     @PutMapping("/{mediaId}")
     @ApiOperation(value = "미디어 메타데이터 업데이트")
-    public ResponseEntity<MediaDTO> updateMedia(
+    public ResponseEntity<MediaEntity> updateMedia(
             @ApiParam(value = "미디어 ID", required = true) @PathVariable Long mediaId,
-            @ApiParam(value = "업데이트된 미디어 정보", required = true) @RequestBody MediaDTO updatedMediaDTO) {
-        MediaDTO updatedMedia = mediaService.updateMedia(mediaId, updatedMediaDTO);
+            @ApiParam(value = "미디어 파일", required = true) @RequestParam("file") MultipartFile file) {
+        MediaEntity updatedMedia = mediaService.updateMedia(mediaId, file);
         return ResponseEntity.ok(updatedMedia);
     }
 

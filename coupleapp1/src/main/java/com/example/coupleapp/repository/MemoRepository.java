@@ -4,12 +4,10 @@ import com.example.coupleapp.entity.MemoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MemoRepository extends JpaRepository<MemoEntity, Long> {
-    List<MemoEntity> findMemoByMemberId(Long memberId);
-    List<MemoEntity> findByMemoContent(String memoContent);
-    List<MemoEntity> findByMyPhoneNumber(String myPhoneNumber);
-    List<MemoEntity> findByYourPhoneNumber(String yourPhoneNumber);
+
+    MemoEntity findByMemberIdAndMemoId(Long memberId, Long memoId);
 }

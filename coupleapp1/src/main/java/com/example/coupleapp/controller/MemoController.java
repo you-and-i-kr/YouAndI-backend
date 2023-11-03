@@ -25,10 +25,10 @@ public class MemoController {
     // 새로운 메모 생성
     @PostMapping
     @ApiOperation(value = "새로운 메모 생성")
-    public ResponseEntity<MemoDTO> createMemo(
+    public ResponseEntity<MemoEntity> createMemo(
             @ApiParam(value = "메모 데이터", required = true) @RequestBody MemoDTO memoDTO) {
         Long memberId = AuthHolder.getMemberId();
-        MemoDTO createdMemo = memoService.createMemo(memoDTO,memberId);
+        MemoEntity createdMemo = memoService.createMemo(memoDTO,memberId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMemo);
     }
 

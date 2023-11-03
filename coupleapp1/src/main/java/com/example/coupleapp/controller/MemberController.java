@@ -35,7 +35,6 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
-
     private final S3ImageService s3ImageService;
     private final ImageRepository imageRepository;
 
@@ -55,37 +54,36 @@ public class MemberController {
         return ResponseEntity.ok().body(tokenDTO);
     }
 
-    @ApiOperation(value = "이미지리스트 업로드 테스트")
-    @PostMapping(value = "/images",consumes = "multipart/form-data")
-    public ResponseEntity<?> imagListTest(
-            @RequestPart(value = "imageFiles",required = false) List<MultipartFile> imageFiles) throws IOException {
-        return ResponseEntity.ok().body(s3ImageService.uploadImageFileList(imageFiles));
-    }
+//    @ApiOperation(value = "이미지리스트 업로드 테스트")
+//    @PostMapping(value = "/images",consumes = "multipart/form-data")
+//    public ResponseEntity<?> imagListTest(
+//            @RequestPart(value = "imageFiles",required = false) List<MultipartFile> imageFiles) throws IOException {
+//        return ResponseEntity.ok().body(s3ImageService.uploadImageFileList(imageFiles));
+//    }
 
+//
+//    @ApiOperation(value = "이미지 업로드 테스트")
+//    @PostMapping(value = "/image")
+//    public ResponseEntity<?> imgTest(
+//            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
+//        String uploadedImageUrl = s3ImageService.saveImageToS3AndDatabase(imageFile);
+//        return ResponseEntity.ok().body(uploadedImageUrl);
+//    }
 
-    @ApiOperation(value = "이미지 업로드 테스트")
-    @PostMapping(value = "/image")
-    public ResponseEntity<?> imgTest(
-            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
-        String uploadedImageUrl = s3ImageService.saveImageToS3AndDatabase(imageFile);
-        return ResponseEntity.ok().body(uploadedImageUrl);
-    }
-
-    @ApiOperation(value = "이미지 가져오기", notes = "데이터베이스에 저장된 이미지를 가져옵니다.")
-    @GetMapping("/images/{imageId}")
-    public ResponseEntity<byte[]> getImage(
-            @ApiParam(value = "이미지 ID", required = true) @PathVariable Long imageId) {
-        Optional<ImageEntity> imageOptional = imageRepository.findById(imageId);
-        if (imageOptional.isPresent()) {
-            ImageEntity image = imageOptional.get();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_JPEG); // Modify based on the image type
-
-            return new ResponseEntity<>(image.getImageData(), headers, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @ApiOperation(value = "이미지 가져오기", notes = "데이터베이스에 저장된 이미지를 가져옵니다.")
+//    @GetMapping("/images/{imageId}")
+//    public ResponseEntity<byte[]> getImage(
+//            @ApiParam(value = "이미지 ID", required = true) @PathVariable Long imageId) {
+//        Optional<ImageEntity> imageOptional = imageRepository.findById(imageId);
+//        if (imageOptional.isPresent()) {
+//            ImageEntity image = imageOptional.get();
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.IMAGE_JPEG); // Modify based on the image type
+//
+//            return new ResponseEntity<>(image.getImageData(), headers, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
 
 
 
@@ -98,8 +96,8 @@ public class MemberController {
 
 
 
-    @GetMapping
-    public ResponseEntity<?> test() {
-        return ResponseEntity.ok().body("로그인한 유저의 식별값입니다.  = " + AuthHolder.getMemberId());
-    }
+//    @GetMapping
+//    public ResponseEntity<?> test() {
+//        return ResponseEntity.ok().body("로그인한 유저의 식별값입니다.  = " + AuthHolder.getMemberId());
+//    }
 }

@@ -4,6 +4,8 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+import com.example.coupleapp.dto.MemberDTO;
+import com.sun.istack.NotNull;
 import lombok.*;
 
 @Getter
@@ -16,8 +18,8 @@ import lombok.*;
 public class MemberEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="member_id")
-    private Long member_id;
+    @Column(name="id",nullable = false)
+    private Long id;
 
     @Column(name = "email")
     private String email;
@@ -37,16 +39,15 @@ public class MemberEntity {
     @Column(name = "note_name")
     private String  name;
 
-    @Column(name = "created_at")
-    private Timestamp created_at;
+    @Column(name = "created_at",updatable = false)
+    private LocalDateTime created_at;
 
     @Column(name = "updated_at")
-    private Timestamp updated_at;
+    private LocalDateTime updated_at;
 
     @Column(name = "my_profile_image")
     private String my_profile_image;
 
     @Column(name = "your_profile_image")
     private String your_profile_image;
-
 }

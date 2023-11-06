@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface MediaRepository extends JpaRepository<MediaEntity, Long> {
-    @Query("SELECT m.mediaUrl FROM MediaEntity m WHERE m.myPhoneNumber = :myPhoneNum OR m.myPhoneNumber = :yourPhoneNum")
+    @Query("SELECT m.media_url FROM MediaEntity m WHERE m.my_phone_number = :myPhoneNum OR m.my_phone_number = :yourPhoneNum")
     List<String> findMedialist(@Param("myPhoneNum") String myPhoneNum, @Param("yourPhoneNum") String yourPhoneNum);
 
 }

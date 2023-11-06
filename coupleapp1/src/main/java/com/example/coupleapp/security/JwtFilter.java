@@ -5,6 +5,7 @@ import com.example.coupleapp.exception.domian.MemberException;
 import com.example.coupleapp.service.MemberDetailServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,15 +22,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
+@RequiredArgsConstructor
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
+
     private final JwtUtil jwtUtil;
     private final MemberDetailServiceImpl memberDetailService;
-    public JwtFilter(JwtUtil jwtUtil, MemberDetailServiceImpl memberDetailService) {
-        this.jwtUtil =jwtUtil;
-        this.memberDetailService = memberDetailService;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

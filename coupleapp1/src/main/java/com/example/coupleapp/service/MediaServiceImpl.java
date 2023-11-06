@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.print.attribute.standard.Media;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,14 +49,15 @@ public class MediaServiceImpl implements MediaService {
     public MediaDTO uploadMedia(MultipartFile file, Long memberId) {
         // MultipartFile을 File로 변환
        String mediaUrl= s3mediaService.uploadMediaFile(file);
-       MemberEntity member = memberRepository.findMemberByMemberId(memberId);
+       MemberEntity member = memberRepository.findMemberById(memberId);
 
 
         // 데이터베이스에 미디어 메타데이터 저장
         MediaEntity media = new MediaEntity();
-        media.setMediaUrl(mediaUrl);
-        media.setMyPhoneNumber(member.getMy_phone_number());
-        media.setYourPhoneNumber(member.getYour_phone_number());
+        media.setMedia_url(mediaUrl);
+        media.setMy_phone_number(member.getMy_phone_number());
+        media.setYour_phone_number(member.getYour_phone_number());
+        media.setCreated_at(LocalDateTime.now());
         MediaEntity savedMedia = mediaRepository.save(media);
 
         return convertEntityToDTO(savedMedia);
@@ -70,11 +72,8 @@ public class MediaServiceImpl implements MediaService {
 
     @Override
     public List<String> getMedias(Long memberId) {
-        // member의 내번호와 맞는 데이터 + 내번호에 상대방번호가 넣어진 데이터들 불러오기
-        MemberEntity member = memberRepository.findMemberByMemberId(memberId);
-        // 내 번호
+        MemberEntity member = memberRepository.findMemberById(memberId);
         String myPhoneNum = member.getMy_phone_number();
-        // 상대방 번호
         String yourPhoneNum = member.getYour_phone_number();
         return mediaRepository.findMedialist(myPhoneNum,yourPhoneNum);
     }
@@ -89,7 +88,7 @@ public class MediaServiceImpl implements MediaService {
         // 특정 ID에 해당하는 미디어를 업데이트하는 로직 (mediaRepository 사용)
         MediaEntity existingMedia = mediaRepository.findById(mediaId)
                 .orElseThrow(()-> new MediaException(MediaErrorCode.FAIL_UPDATE));
-        existingMedia.setMediaUrl(existingMedia.getMediaUrl());
+        existingMedia.setMedia_url(existingMedia.getMedia_url());
         // Save the updated memoEntity in the repository
         return mediaRepository.save(existingMedia);
     }
@@ -103,8 +102,8 @@ public class MediaServiceImpl implements MediaService {
 
     private MediaDTO convertEntityToDTO(MediaEntity mediaEntity) {
         MediaDTO mediaDTO = new MediaDTO();
-        mediaDTO.setMediaId(mediaEntity.getMediaId());
-        mediaDTO.setMediaUrl(mediaEntity.getMediaUrl());
+        mediaDTO.setMediaId(mediaEntity.getId());
+        mediaDTO.setMediaUrl(mediaEntity.getMedia_url());
 //        mediaDTO.setMyPhoneNumber(mediaEntity.getMyPhoneNumber());
 //        mediaDTO.setYourPhoneNumber(mediaEntity.getYourPhoneNumber());
 //        // 다른 필드 설정

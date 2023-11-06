@@ -9,9 +9,5 @@ import java.util.Optional;
 @Repository
 public interface MemoRepository extends JpaRepository<MemoEntity, Long> {
 
-    MemoEntity findByMemberIdAndMemoId(Long memberId, Long memoId);
-
-    MemoEntity findByMemberId(Long memoId);
-
-    MemoEntity findByMemoId(Long memoId);
+//    MemoEntity findByMemberAndMemoId(Long memberId, Long memoId);
 }

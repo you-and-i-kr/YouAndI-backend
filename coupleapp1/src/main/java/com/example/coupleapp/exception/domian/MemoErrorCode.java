@@ -13,7 +13,7 @@ public enum MemoErrorCode {
     //status(HttpStatus.BAD_REQUEST) 400
     LOGIN_FAIL("메모확인에 실패하였습니다.", HttpStatus.BAD_REQUEST.value()),
     USER_NOT_FOUND("존재하지 않는 유저입니다.", HttpStatus.BAD_REQUEST.value()),
-    NOT_USER("memo가 아닙니다.",HttpStatus.BAD_REQUEST.value()),
+    NOT_EQUL_COUPLE("커플이 작성한 memo가 아닙니다.",HttpStatus.BAD_REQUEST.value()),
     NOT_EQUL_PASSWORD("기존의 번호와 일치하지 않습니다.",HttpStatus.BAD_REQUEST.value()),
 
     FAIL_UPDATE("업데이트 실패했습니다.",HttpStatus.BAD_REQUEST.value()),

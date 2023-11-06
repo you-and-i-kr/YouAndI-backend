@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 
@@ -42,13 +43,15 @@ public class MemberService {
         }
 
         memberRepository.save(
-                MemberEntity.builder()
+                MemberEntity
+                        .builder()
                         .email(memberDTO.getEmail())
                         .password(passwordEncoder.encode(memberDTO.getPassword()))
                         .name(memberDTO.getNote_name())
                         .my_phone_number(memberDTO.getMy_phone_number())
                         .your_phone_number(memberDTO.getYour_phone_number())
                         .start_date(memberDTO.getStart_date())
+                        .created_at(LocalDateTime.now())
                         .build());
         return "회원가입 완료";
 
@@ -70,7 +73,7 @@ public class MemberService {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // 아이디 정보로 Token 생성
-            TokenDTO tokenDTO = jwtUtil.creatAllToken(member.getEmail(), member.getName(), member.getMember_id());
+            TokenDTO tokenDTO = jwtUtil.creatAllToken(member.getEmail(), member.getId());
 
             // Refresh Token 있는지 확인
             Optional<RefreshTokenEntity> refreshToken = refreshTokenRepository.findByEmail(loginRequestDTO.getEmail());

@@ -5,6 +5,6 @@ import com.example.coupleapp.entity.MemberEntity;
 public interface MemberRepositoryCustom {
     MemberEntity findUserByEmail(String email);
 
-    MemberEntity findMemberByMemberId(Long memberId);
+    MemberEntity findMemberById(Long memberId);
 
 }

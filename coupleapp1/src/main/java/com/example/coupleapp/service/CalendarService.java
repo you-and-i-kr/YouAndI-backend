@@ -47,7 +47,7 @@ public class CalendarService {
         }
         CalendarDTO calendarDTO = new CalendarDTO();
         calendarDTO.setCalendarId(calendarEntity.getCalendarId());
-        calendarDTO.setMemberId(calendarEntity.getMember().getMember_id());
+        calendarDTO.setMemberId(calendarEntity.getMember().getId());
         calendarDTO.setTitle(calendarEntity.getTitle());
         calendarDTO.setMemo(calendarEntity.getMemo());
         calendarDTO.setStartDate(calendarEntity.getStartDate());

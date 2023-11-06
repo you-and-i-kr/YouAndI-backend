@@ -5,19 +5,14 @@ import com.example.coupleapp.dto.MemoResponseDTO;
 import com.example.coupleapp.entity.MemberEntity;
 import com.example.coupleapp.entity.MemoEntity;
 import com.example.coupleapp.entity.PhotoEntity;
-import com.example.coupleapp.exception.domian.CommonErrorCode;
-import com.example.coupleapp.exception.domian.CommonException;
-import com.example.coupleapp.exception.domian.MemoErrorCode;
-import com.example.coupleapp.exception.domian.MemoException;
+import com.example.coupleapp.exception.domian.*;
 import com.example.coupleapp.repository.MemberRepository;
 import com.example.coupleapp.repository.MemoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -60,6 +55,28 @@ public class MemoService {
         memoRepository.deleteById(memoId);
     }
 
+    public List<Map<String,String>> getMemos(Long memberId) {
+        MemberEntity member = memberRepository.findMemberById(memberId);
+        String myPhoneNumber = member.getMy_phone_number();
+        String yourPhoneNumber = member.getYour_phone_number();
+
+        List<String> getMemoList = memoRepository.findMemoListByPhoneNumber(myPhoneNumber,yourPhoneNumber);
+
+        if(getMemoList.size() == 0) throw new MemoException(MemoErrorCode.NOT_FOUND_MEMO);
+
+        List<Map<String,String>> resultList = new ArrayList<>();
+        for (String memo : getMemoList) {
+            String[] parts = memo.split(",");
+            Map<String, String> memoMap = new HashMap<>();
+            memoMap.put("memo_id", parts[0]);
+            memoMap.put("content", parts[1]);
+            resultList.add(memoMap);
+        }
+        return resultList;
+
+    }
+
+
 //    private MemoDTO convertEntityToDTO(MemoEntity memoEntity) {
 //        MemoDTO memoDTO = new MemoDTO();
 //        memoDTO.setMemberId(memoEntity.getMemberId());
@@ -70,10 +87,4 @@ public class MemoService {
 //        return memoDTO;
 //    }
 
-
-//    public MemoEntity getMemo(Long memberId, Long memoId) {
-//        MemoEntity memo = memoRepository.findByMemoId(memoId);
-//        if(!Objects.equals(memberId, memo.getMemo_id())) throw new MemoException(MemoErrorCode.NOT_EQUL_COUPLE);
-//        return  memoRepository.findByMemberAndMemoId(memberId,memoId);
-//    }
 }

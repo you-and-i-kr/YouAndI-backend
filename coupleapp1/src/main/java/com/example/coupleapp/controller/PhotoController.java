@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -27,24 +28,32 @@ public class PhotoController {
     private final PhotoService photoService;
 
     // 새로운 사진을 Amazon S3에 업로드하고 데이터베이스에 메타데이터를 저장
-    @PostMapping
-    @ApiOperation(value = "새로운 사진을 Amazon S3에 업로드하고 메타데이터 저장")
-    public ResponseEntity<PhotoResponseDTO> uploadPhoto(
-            @ApiParam(value = "사진 파일", required = true) @RequestParam("file") MultipartFile file) {
-        // PhotoService에서 사진 업로드 및 저장 로직 구현
+//    @PostMapping
+//    @ApiOperation(value = "새로운 사진을 Amazon S3에 업로드하고 메타데이터 저장")
+//    public ResponseEntity<PhotoResponseDTO> uploadPhoto(
+//            @ApiParam(value = "사진 파일", required = true) @RequestParam("file") MultipartFile file) {
+//        // PhotoService에서 사진 업로드 및 저장 로직 구현
+//        Long memberId = AuthHolder.getMemberId();
+//        PhotoResponseDTO uploadedPhoto = photoService.uploadPhoto(file,memberId);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(uploadedPhoto);
+//    }
+
+    @PostMapping(consumes = "multipart/form-data")
+    @ApiOperation(value = "여러개 사진 업로드 / Total 10MB 이하만 전송 가능")
+    public ResponseEntity<?> uploadMediaList(
+            @RequestParam List<MultipartFile>  photoFiles) throws IOException {
         Long memberId = AuthHolder.getMemberId();
-        PhotoResponseDTO uploadedPhoto = photoService.uploadPhoto(file,memberId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(uploadedPhoto);
+        String savedMediaList = photoService.uploadMediaList(photoFiles,memberId);
+        return ResponseEntity.ok().body(savedMediaList);
     }
 
 
     // 멤버 ID에 해당하는 사진 가져오기
     @GetMapping
     @ApiOperation(value = "저장한 사진들 불러오기")
-    public ResponseEntity<List<String>> getPhoto() {
+    public ResponseEntity<?> getPhoto() {
         Long memberId = AuthHolder.getMemberId();
-        List<String> photolist = photoService.getPhotoById(memberId);
-        return ResponseEntity.ok(photolist);
+        return ResponseEntity.ok(photoService.getPhotoById(memberId));
     }
 
     // 사진 메타데이터 업데이트

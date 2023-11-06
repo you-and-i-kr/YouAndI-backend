@@ -15,6 +15,7 @@ public enum MemoErrorCode {
     USER_NOT_FOUND("존재하지 않는 유저입니다.", HttpStatus.BAD_REQUEST.value()),
     NOT_EQUL_COUPLE("커플이 작성한 memo가 아닙니다.",HttpStatus.BAD_REQUEST.value()),
     NOT_EQUL_PASSWORD("기존의 번호와 일치하지 않습니다.",HttpStatus.BAD_REQUEST.value()),
+    NOT_FOUND_MEMO("저장된 메모가 없습니다",HttpStatus.BAD_REQUEST.value()),
 
     FAIL_UPDATE("업데이트 실패했습니다.",HttpStatus.BAD_REQUEST.value()),
 

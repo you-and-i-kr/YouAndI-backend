@@ -45,7 +45,7 @@ public class MediaController {
     @PostMapping(consumes = "multipart/form-data")
     @ApiOperation(value = "여러개 미디어 업로드 / Total 10MB 이하만 전송 가능")
     public ResponseEntity<?> uploadMediaList(
-            @RequestParam List<MultipartFile>  mediaFiles) throws IOException {
+            @RequestParam("mediaFiles") List<MultipartFile>  mediaFiles) throws IOException {
         Long memberId = AuthHolder.getMemberId();
         String savedMediaList = mediaService.uploadMediaList(mediaFiles,memberId);
         return ResponseEntity.ok().body(savedMediaList);

@@ -1,6 +1,5 @@
 package com.example.coupleapp.service;
 
-import com.example.coupleapp.repository.ImageRepository;
 import com.example.coupleapp.security.JwtUtil;
 
 import com.example.coupleapp.dto.LoginRequestDTO;
@@ -10,7 +9,7 @@ import com.example.coupleapp.entity.MemberEntity;
 import com.example.coupleapp.entity.RefreshTokenEntity;
 import com.example.coupleapp.exception.domian.MemberErrorCode;
 import com.example.coupleapp.exception.domian.MemberException;
-import com.example.coupleapp.repository.MemberRepository;
+import com.example.coupleapp.repository.Member.MemberRepository;
 import com.example.coupleapp.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

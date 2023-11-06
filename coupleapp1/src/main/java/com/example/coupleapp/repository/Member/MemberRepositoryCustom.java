@@ -1,4 +1,4 @@
-package com.example.coupleapp.repository;
+package com.example.coupleapp.repository.Member;
 
 import com.example.coupleapp.entity.MemberEntity;
 

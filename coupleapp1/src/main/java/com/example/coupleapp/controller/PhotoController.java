@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,9 +43,9 @@ public class PhotoController {
     @PostMapping(consumes = "multipart/form-data")
     @ApiOperation(value = "여러개 사진 업로드 / Total 10MB 이하만 전송 가능")
     public ResponseEntity<?> uploadMediaList(
-            @RequestParam List<MultipartFile>  photoFiles) throws IOException {
+            @RequestParam("photoFiles") List<MultipartFile>  photoFiles) throws IOException {
         Long memberId = AuthHolder.getMemberId();
-        String savedMediaList = photoService.uploadMediaList(photoFiles,memberId);
+        String savedMediaList = photoService.uploadPhotoList(photoFiles,memberId);
         return ResponseEntity.ok().body(savedMediaList);
     }
 
@@ -51,9 +53,9 @@ public class PhotoController {
     // 멤버 ID에 해당하는 사진 가져오기
     @GetMapping
     @ApiOperation(value = "저장한 사진들 불러오기")
-    public ResponseEntity<?> getPhoto() {
+    public ResponseEntity<?> getPhoto(@PageableDefault(size = 20)Pageable pageable) {
         Long memberId = AuthHolder.getMemberId();
-        return ResponseEntity.ok(photoService.getPhotoById(memberId));
+        return ResponseEntity.ok(photoService.getPhotoById(memberId,pageable));
     }
 
     // 사진 메타데이터 업데이트

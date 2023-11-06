@@ -1,13 +1,16 @@
 package com.example.coupleapp.service;
 
-import com.example.coupleapp.dto.PhotoDTO;
 import com.example.coupleapp.dto.PhotoResponseDTO;
-import com.example.coupleapp.entity.MediaEntity;
 import com.example.coupleapp.entity.MemberEntity;
 import com.example.coupleapp.entity.PhotoEntity;
 import com.example.coupleapp.exception.domian.*;
-import com.example.coupleapp.repository.MemberRepository;
-import com.example.coupleapp.repository.PhotoRepository;
+import com.example.coupleapp.repository.Member.MemberRepository;
+import com.example.coupleapp.repository.Photo.PhotoRepository;
+import com.querydsl.core.Tuple;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -71,29 +74,41 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public List<Map<String,String>> getPhotoById(Long memberId) {
+    public Page<Map<String, String>> getPhotoById(Long memberId, Pageable pageable) {
 
         MemberEntity member = memberRepository.findMemberById(memberId);
         String myPhoneNum = member.getMy_phone_number();
         String yourPhoneNum = member.getYour_phone_number();
 
-        List<String> getPhotoList = photoRepository.findimglist(myPhoneNum,yourPhoneNum);
+        List<Tuple> getPhotoList = photoRepository.findimglist(myPhoneNum,yourPhoneNum,pageable);
 
         if(getPhotoList.size() == 0) throw new PhotoException(PhotoErrorCode.NOT_FOUND_PHOTO);
 
-        List<Map<String,String>> resultList = new ArrayList<>();
-        for (String memo : getPhotoList) {
-            String[] parts = memo.split(",");
-            Map<String, String> photoMap = new HashMap<>();
-            photoMap.put("photo_id", parts[0]);
-            photoMap.put("url", parts[1]);
+        List<Map<String, String>> resultList = new ArrayList<>();
+        for(Tuple tuple : getPhotoList){
+            Map<String,String> photoMap = new HashMap<>();
+            photoMap.put("photo_id", String.valueOf(tuple.get(0,Long.class)));
+            photoMap.put("imgUrl",tuple.get(1, String.class));
             resultList.add(photoMap);
         }
-        return resultList;
+
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+
+        return new PageImpl<>(resultList, pageRequest, resultList.size());
+
+//        List<Map<String,String>> resultList = new ArrayList<>();
+//        for (String memo : getPhotoList) {
+//            String[] parts = memo.split(",");
+//            Map<String, String> photoMap = new HashMap<>();
+//            photoMap.put("photo_id", parts[0]);
+//            photoMap.put("url", parts[1]);
+//            resultList.add(photoMap);
+//        }
+//        return resultList;
     }
 
     @Override
-    public String uploadMediaList(List<MultipartFile> photoFiles, Long memberId) {
+    public String uploadPhotoList(List<MultipartFile> photoFiles, Long memberId) {
         if(photoFiles.size() == 0) throw new PhotoException(PhotoErrorCode.NOT_FOUND_FILE);
 
         MemberEntity member = memberRepository.findMemberById(memberId);

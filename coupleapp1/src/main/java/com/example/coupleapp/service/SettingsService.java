@@ -1,11 +1,6 @@
 package com.example.coupleapp.service;
 
-import com.example.coupleapp.dto.MemberDTO;
-import com.example.coupleapp.dto.SettingsDTO;
-import com.example.coupleapp.entity.MemberEntity;
-import com.example.coupleapp.entity.SettingsEntity;
-import com.example.coupleapp.exception.domian.SettingsNotFoundException;
-import com.example.coupleapp.repository.MemberRepository;
+import com.example.coupleapp.repository.Member.MemberRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

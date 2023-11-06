@@ -28,7 +28,7 @@ public class MediaController {
     private final S3mediaService s3mediaService;
     // 새로운 미디어를 Amazon S3에 업로드하고 데이터베이스에 메타데이터를 저장
     @PostMapping
-    @ApiOperation(value = "새로운 미디어를 Amazon S3에 업로드하고 메타데이터 저장")
+    @ApiOperation(value = "새로운 미디어를 Amazon S3에 업로드하고 메타데이터 저장 / 10MB 이하만 전송 가능 ")
     public ResponseEntity<MediaDTO> uploadMedia(
             @ApiParam(value = "미디어 파일", required = true) @RequestParam("file") MultipartFile file)
     {

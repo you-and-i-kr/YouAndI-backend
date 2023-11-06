@@ -49,7 +49,7 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public TokenDTO creatAllToken(String email, String userName,Long memberId) {
+    public TokenDTO creatAllToken(String email, Long memberId) {
         return new TokenDTO(createToken(email,memberId,"Access"),createToken(email,memberId,"Refresh"));
     }
 

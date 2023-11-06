@@ -61,7 +61,7 @@ public class MemberController {
 //        return ResponseEntity.ok().body(s3ImageService.uploadImageFileList(imageFiles));
 //    }
 
-//
+
 //    @ApiOperation(value = "이미지 업로드 테스트")
 //    @PostMapping(value = "/image")
 //    public ResponseEntity<?> imgTest(

@@ -25,12 +25,11 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .fetchFirst();
     }
     @Override
-    public MemberEntity findMemberByMemberId(Long memberId) {
+    public MemberEntity findMemberById(Long memberId) {
         return queryFactory
                 .selectFrom(qMemberEntity)
-                .where(qMemberEntity.member_id.eq(memberId))
+                .where(qMemberEntity.id.eq(memberId))
                 .fetchFirst();
     }
-
 
 }

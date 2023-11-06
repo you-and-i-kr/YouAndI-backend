@@ -11,6 +11,7 @@ import com.example.coupleapp.repository.PhotoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,18 +34,19 @@ public class PhotoServiceImpl implements PhotoService {
         // Amazon S3에 이미지 업로드 및 URL 받아오는 로직 (s3ImageService를 사용)
         String imageUrl = s3ImageService.uploadImageFile(file);
         // 데이터베이스에 사진 메타데이터 저장
-        MemberEntity member = memberRepository.findMemberByMemberId(memberId);
+        MemberEntity member = memberRepository.findMemberById(memberId);
 
 
         PhotoEntity photo = new PhotoEntity();
         photo.setImgUrl(imageUrl);
-        photo.setMyPhoneNumber(member.getMy_phone_number());
-        photo.setYourPhoneNumber(member.getYour_phone_number());
+        photo.setMy_phone_number(member.getMy_phone_number());
+        photo.setYour_phone_number(member.getYour_phone_number());
         photo.setMember(member);
+        photo.setCreated_at(LocalDateTime.now());
         // 다른 필드 설정
         PhotoEntity savedPhoto = photoRepository.save(photo);
         PhotoResponseDTO responseDTO = new PhotoResponseDTO();
-        responseDTO.setPhotoId(savedPhoto.getPhotoId());
+        responseDTO.setPhotoId(savedPhoto.getId());
         responseDTO.setImgUrl(savedPhoto.getImgUrl());
 
         return responseDTO;
@@ -71,7 +73,7 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     public List<String> getPhotoById(Long memberId) {
         // member의 내번호와 맞는 데이터 + 내번호에 상대방번호가 넣어진 데이터들 불러오기
-        MemberEntity member = memberRepository.findMemberByMemberId(memberId);
+        MemberEntity member = memberRepository.findMemberById(memberId);
         // 내 번호
         String myPhoneNum = member.getMy_phone_number();
         // 상대방 번호
@@ -82,7 +84,7 @@ public class PhotoServiceImpl implements PhotoService {
     private PhotoResponseDTO convertToDTO(PhotoEntity photo) {
         // Photo 엔티티를 PhotoDTO로 변환하는 로직
         PhotoResponseDTO photoDTO = new PhotoResponseDTO();
-        photoDTO.setPhotoId(photo.getPhotoId());
+        photoDTO.setPhotoId(photo.getId());
         photoDTO.setImgUrl(photo.getImgUrl());
 //        photoDTO.setMyPhoneNumber(photo.getMyPhoneNumber());
 //        photoDTO.setYourPhoneNumber(photo.getYourPhoneNumber());

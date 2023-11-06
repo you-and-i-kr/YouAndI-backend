@@ -34,14 +34,14 @@ public class MemoController {
     }
 
     // 특정 ID에 해당하는 메모 가져오기
-    @GetMapping("/{memoId}")
-    @ApiOperation(value = "특정 ID에 해당하는 메모 가져오기")
-    public ResponseEntity<MemoEntity> getMemo(
-            @ApiParam(value = "메모 ID", required = true) @PathVariable Long memoId) {
-        Long memberId = AuthHolder.getMemberId();
-        MemoEntity memo = memoService.getMemo( memberId, memoId);
-        return ResponseEntity.ok(memo);
-    }
+//    @GetMapping("/{memoId}")
+//    @ApiOperation(value = "특정 ID에 해당하는 메모 가져오기")
+//    public ResponseEntity<MemoEntity> getMemo(
+//            @ApiParam(value = "메모 ID", required = true) @PathVariable Long memoId) {
+//        Long memberId = AuthHolder.getMemberId();
+//        MemoEntity memo = memoService.getMemo( memberId, memoId);
+//        return ResponseEntity.ok(memo);
+//    }
 
     // 메모 업데이트
     @PutMapping("/{memoId}")

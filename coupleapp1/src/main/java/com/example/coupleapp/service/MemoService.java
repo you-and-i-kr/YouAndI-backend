@@ -14,6 +14,7 @@ import com.example.coupleapp.repository.MemoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -26,18 +27,19 @@ public class MemoService {
     private final MemberRepository memberRepository;
     public MemoResponseDTO createMemo(MemoDTO memoDTO, Long memberId) {
 
-        MemberEntity member = memberRepository.findMemberByMemberId(memberId);
+        MemberEntity member = memberRepository.findMemberById(memberId);
 
-        MemoEntity memoEntity = new MemoEntity();
-        memoEntity.setMemberId(memberId);
-        memoEntity.setMyPhoneNumber(member.getMy_phone_number());
-        memoEntity.setYourPhoneNumber(member.getYour_phone_number());
-        memoEntity.setMemoContent(memoDTO.getMemoContent());
+        MemoEntity newMemo = new MemoEntity();
+        newMemo.setMember(member);
+        newMemo.setMyPhoneNumber(member.getMy_phone_number());
+        newMemo.setYourPhoneNumber(member.getYour_phone_number());
+        newMemo.setMemoContent(memoDTO.getMemoContent());
+        newMemo.setCreated_at(LocalDateTime.now());
 
-        MemoEntity saveMemo = memoRepository.save(memoEntity);
+        MemoEntity saveMemo = memoRepository.save(newMemo);
         MemoResponseDTO memoResponseDTO = new MemoResponseDTO();
         memoResponseDTO.setMemoContent(saveMemo.getMemoContent());
-        memoResponseDTO.setMemoId(saveMemo.getMemoId());
+        memoResponseDTO.setMemoId(saveMemo.getId());
         return memoResponseDTO;
     }
 
@@ -48,7 +50,7 @@ public class MemoService {
         // Retrieve the existing memoEntity by memoId
         MemoEntity existingMemo = memoRepository.findById(memoId)
                 .orElseThrow(() ->new MemoException(MemoErrorCode.FAIL_UPDATE));
-// Update the memoContent
+        // Update the memoContent
         existingMemo.setMemoContent(memoContent);
         // Save the updated memoEntity in the repository
         return memoRepository.save(existingMemo);
@@ -69,13 +71,9 @@ public class MemoService {
 //    }
 
 
-    public MemoEntity getMemo(Long memberId, Long memoId) {
-        //1.메모 테이블에 있는 멤버아이디에 해당하는 데이터들 가져오기
-        //2. 방금 가져온 데이터들 중에서 메모 아이디에 해당하는 값을 추출하기
-        //3. 예외처리
-        MemoEntity memo = memoRepository.findByMemoId(memoId);
-        // 예외처리 코드 새로 짜서 수정해주사면 됩니당~!!
-        if(!Objects.equals(memberId, memo.getMemberId())) throw new CommonException(CommonErrorCode.NOT_FOUND_IMG_FILES);
-        return  memoRepository.findByMemberIdAndMemoId(memberId,memoId);
-    }
+//    public MemoEntity getMemo(Long memberId, Long memoId) {
+//        MemoEntity memo = memoRepository.findByMemoId(memoId);
+//        if(!Objects.equals(memberId, memo.getMemo_id())) throw new MemoException(MemoErrorCode.NOT_EQUL_COUPLE);
+//        return  memoRepository.findByMemberAndMemoId(memberId,memoId);
+//    }
 }

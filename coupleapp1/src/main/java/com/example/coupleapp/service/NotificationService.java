@@ -47,7 +47,7 @@ public class NotificationService {
         }
         NotificationDTO notificationDTO = new NotificationDTO();
         notificationDTO.setId(notificationEntity.getId());
-        notificationDTO.setPartnerId(notificationEntity.getPartner().getMember_id());
+        notificationDTO.setPartnerId(notificationEntity.getPartner().getId());
         notificationDTO.setCreatedAt(notificationEntity.getCreated_at());
         notificationDTO.setTargetId(notificationEntity.getTarget_id());
         notificationDTO.setIsRead(notificationEntity.getIs_read());

@@ -13,7 +13,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
 
   mvc:
-    pathmatch:
+    path-match:
       matching-strategy: ant_path_matcher
   profiles:
     active: development

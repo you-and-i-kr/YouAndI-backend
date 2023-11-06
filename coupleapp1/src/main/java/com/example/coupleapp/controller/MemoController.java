@@ -33,6 +33,13 @@ public class MemoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMemo);
     }
 
+    @GetMapping
+    @ApiOperation(value = "저장된 메모 가져오기")
+    public ResponseEntity<?> getMemos(){
+        Long memberId = AuthHolder.getMemberId();
+        return ResponseEntity.ok().body(memoService.getMemos(memberId));
+    }
+
     // 특정 ID에 해당하는 메모 가져오기
 //    @GetMapping("/{memoId}")
 //    @ApiOperation(value = "특정 ID에 해당하는 메모 가져오기")

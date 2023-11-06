@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface PhotoRepository extends JpaRepository<PhotoEntity, Long> {
-    @Query("SELECT p.imgUrl FROM PhotoEntity p WHERE p.my_phone_number = :myPhoneNum OR p.my_phone_number = :yourPhoneNum")
+    @Query("SELECT p.id,p.imgUrl FROM PhotoEntity p WHERE p.my_phone_number = :myPhoneNum OR p.my_phone_number = :yourPhoneNum")
     List<String> findimglist(@Param("myPhoneNum") String myPhoneNum, @Param("yourPhoneNum") String yourPhoneNum);
 
 }

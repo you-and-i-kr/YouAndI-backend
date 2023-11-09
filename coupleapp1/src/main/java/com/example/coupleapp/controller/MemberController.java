@@ -1,5 +1,6 @@
 package com.example.coupleapp.controller;
 
+
 import com.example.coupleapp.entity.ImageEntity;
 import com.example.coupleapp.repository.ImageRepository;
 import com.example.coupleapp.security.AuthHolder;
@@ -38,6 +39,7 @@ public class MemberController {
     private final S3ImageService s3ImageService;
     private final ImageRepository imageRepository;
 
+
     @ApiOperation(value = "회원가입")
     @PostMapping("/create")
     public ResponseEntity<String> createMember(
@@ -53,6 +55,7 @@ public class MemberController {
         httpServletResponse.setHeader(JwtUtil.ACCESS_TOKEN,tokenDTO.getAccessToken());
         return ResponseEntity.ok().body(tokenDTO);
     }
+
 
 //    @ApiOperation(value = "이미지리스트 업로드 테스트")
 //    @PostMapping(value = "/images",consumes = "multipart/form-data")

@@ -2,6 +2,7 @@ package com.example.coupleapp.exception;
 
 import com.example.coupleapp.exception.domian.CommonException;
 import com.example.coupleapp.exception.domian.MemberException;
+import com.example.coupleapp.exception.domian.PhotoException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CommonException.class)
     public ResponseEntity<CommonResponse> handleCommonException(CommonException commonException) {
         CommonResponse errorResponse = new CommonResponse(commonException.getErrorMessage(),commonException.getErrorCode());
+        return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorResponse.getStatus()));
+    }
+
+    @ExceptionHandler(PhotoException.class)
+    public ResponseEntity<CommonResponse> handlePhotoException(PhotoException photoException) {
+        CommonResponse errorResponse = new CommonResponse(photoException.getErrorMessage(),photoException.getErrorCode());
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorResponse.getStatus()));
     }
 }

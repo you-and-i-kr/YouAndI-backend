@@ -1,78 +1,93 @@
 package com.example.coupleapp.service;
 
 import com.example.coupleapp.dto.CalendarDTO;
+import com.example.coupleapp.dto.CalendarUpdateDTO;
 import com.example.coupleapp.entity.CalendarEntity;
-import com.example.coupleapp.repository.CalendarRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.coupleapp.entity.MemberEntity;
+import com.example.coupleapp.exception.domian.CommonErrorCode;
+import com.example.coupleapp.exception.domian.CommonException;
+import com.example.coupleapp.exception.domian.PhotoErrorCode;
+import com.example.coupleapp.exception.domian.PhotoException;
+import com.example.coupleapp.repository.Calendar.CalendarRepository;
+import com.example.coupleapp.repository.Member.MemberRepository;
+import com.example.coupleapp.security.AuthHolder;
+import com.querydsl.core.Tuple;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RequiredArgsConstructor
 @Service
 public class CalendarService {
-    private final CalendarRepository calendarRepository;
 
-    @Autowired
-    public CalendarService(CalendarRepository calendarRepository) {
-        this.calendarRepository = calendarRepository;
+    final private CalendarRepository calendarRepository;
+    final private MemberRepository memberRepository;
+
+    public Long create(CalendarDTO calendarDTO) {
+        Long memberId = AuthHolder.getMemberId();
+        MemberEntity member = memberRepository.findMemberById(memberId);
+        CalendarEntity calendarEntity
+                = new CalendarEntity(
+                member,
+                calendarDTO.getTitle(),
+                calendarDTO.getMemo(),
+                calendarDTO.getCreated_At(),
+                member.getMy_phone_number(),
+                member.getYour_phone_number());
+
+        return calendarRepository.save(calendarEntity).getId();
     }
 
-    public CalendarDTO getCalendarById(Long calendarId) {
-        CalendarEntity calendarEntity = calendarRepository.findById(calendarId).orElse(null);
-        return convertToDTO(calendarEntity);
-    }
+    public List<Map<String, String>> getAllTitle(YearMonth month) {
+        Long memberId = AuthHolder.getMemberId();
+        MemberEntity member = memberRepository.findMemberById(memberId);
+        String myPhoneNum = member.getMy_phone_number();
+        String yourPhoneNum = member.getYour_phone_number();
 
-    public CalendarDTO createCalendar(CalendarDTO calendarDTO) {
-        CalendarEntity calendarEntity = convertToEntity(calendarDTO);
-        calendarEntity = calendarRepository.save(calendarEntity);
-        return convertToDTO(calendarEntity);
-    }
+        LocalDate startDate = LocalDate.parse(month + "-01");
+        LocalDate endDate = LocalDate.parse(month + "-01").plusMonths(1).minusDays(1);
 
-    public CalendarDTO updateCalendar(Long calendarId, CalendarDTO calendarDTO) {
-        CalendarEntity existingCalendarEntity = calendarRepository.findById(calendarId).orElse(null);
-        if (existingCalendarEntity != null) {
-            updateEntityFromDTO(existingCalendarEntity, calendarDTO);
-            calendarRepository.save(existingCalendarEntity);
-            return convertToDTO(existingCalendarEntity);
-        } else {
-            return null; // 업데이트할 항목을 찾지 못한 경우
+        List<Tuple> getMonthList = calendarRepository.findMonthSchedule(myPhoneNum,yourPhoneNum,startDate,endDate);
+
+        if(getMonthList.size() == 0) throw new PhotoException(PhotoErrorCode.NOT_FOUND_FILE);
+
+        List<Map<String, String>> resultList = new ArrayList<>();
+        for(Tuple tuple : getMonthList){
+            Map<String,String> monthMap = new HashMap<>();
+            monthMap.put("calendar_id", String.valueOf(tuple.get(0, Long.class)));
+            monthMap.put("title",tuple.get(1, String.class));
+            monthMap.put("memo",tuple.get(2, String.class));
+            monthMap.put("created_At", String.valueOf(tuple.get(3, LocalDate.class)));
+            resultList.add(monthMap);
         }
+
+        return resultList;
     }
 
-    public void deleteCalendar(Long calendarId) {
-        calendarRepository.deleteById(calendarId);
+    public String update(CalendarUpdateDTO calendarUpdateDTO) {
+        Long memberId = AuthHolder.getMemberId();
+        MemberEntity member = memberRepository.findMemberById(memberId);
+
+        if(calendarRepository.updateContents(member,calendarUpdateDTO) == 0)
+            throw new CommonException(CommonErrorCode.FAIL_TO_UPDATE);
+
+        return "수정이 완료 되었습니다.";
     }
 
-    private CalendarDTO convertToDTO(CalendarEntity calendarEntity) {
-        if (calendarEntity == null) {
-            return null;
-        }
-        CalendarDTO calendarDTO = new CalendarDTO();
-        calendarDTO.setCalendarId(calendarEntity.getCalendarId());
-        calendarDTO.setMemberId(calendarEntity.getMember().getId());
-        calendarDTO.setTitle(calendarEntity.getTitle());
-        calendarDTO.setMemo(calendarEntity.getMemo());
-        calendarDTO.setStartDate(calendarEntity.getStartDate());
-        calendarDTO.setEndDate(calendarEntity.getEndDate());
-        return calendarDTO;
-    }
+    public String delete(Long calendarId) {
+        Long memberId = AuthHolder.getMemberId();
+        MemberEntity member = memberRepository.findMemberById(memberId);
 
-    private CalendarEntity convertToEntity(CalendarDTO calendarDTO) {
-        CalendarEntity calendarEntity = new CalendarEntity();
-        calendarEntity.setCalendarId(calendarDTO.getCalendarId());
-        // MemberEntity를 얻는 방법은 필요에 따라 변경 가능
-        // 예: calendarDTO에서 memberId를 이용하여 MemberEntity 조회
-        calendarEntity.setTitle(calendarDTO.getTitle());
-        calendarEntity.setMemo(calendarDTO.getMemo());
-        calendarEntity.setStartDate(calendarDTO.getStartDate());
-        calendarEntity.setEndDate(calendarDTO.getEndDate());
-        return calendarEntity;
-    }
+        if(calendarRepository.deleteByMemeberId(member,calendarId) == 0)
+            throw new CommonException(CommonErrorCode.FAIL_TO_DELETE);
 
-    private void updateEntityFromDTO(CalendarEntity existingEntity, CalendarDTO calendarDTO) {
-        // MemberEntity 업데이트 로직 추가
-        existingEntity.setTitle(calendarDTO.getTitle());
-        existingEntity.setMemo(calendarDTO.getMemo());
-        existingEntity.setStartDate(calendarDTO.getStartDate());
-        existingEntity.setEndDate(calendarDTO.getEndDate());
-        // 다른 필드도 필요한 경우 업데이트
+        return "삭제 되었습니다.";
     }
 }

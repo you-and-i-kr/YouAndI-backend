@@ -12,7 +12,7 @@ import java.util.Map;
 public interface MediaService {
     MediaDTO uploadMedia(MultipartFile file, Long memberId);
     //    List<MediaDTO> getAllMedia();
-    List<Map<String,String>> getMediaList(Long mediaId);
+    Map<String,Object>  getMediaList(int pageNumber, int pageSize);
     MediaEntity updateMedia(Long mediaId, MultipartFile file);
 
     void deleteMedia(Long mediaId);

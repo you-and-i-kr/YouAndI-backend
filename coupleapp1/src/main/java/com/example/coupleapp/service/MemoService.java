@@ -6,8 +6,12 @@ import com.example.coupleapp.entity.MemberEntity;
 import com.example.coupleapp.entity.MemoEntity;
 import com.example.coupleapp.exception.domian.*;
 import com.example.coupleapp.repository.Member.MemberRepository;
-import com.example.coupleapp.repository.MemoRepository;
+import com.example.coupleapp.repository.Memo.MemoRepository;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -54,24 +58,32 @@ public class MemoService {
         memoRepository.deleteById(memoId);
     }
 
-    public List<Map<String,String>> getMemos(Long memberId) {
+    public Map<String,Object> getMemos(Long memberId,int pageNumber,int pageSize) {
         MemberEntity member = memberRepository.findMemberById(memberId);
-        String myPhoneNumber = member.getMy_phone_number();
-        String yourPhoneNumber = member.getYour_phone_number();
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        Page<Tuple> getMemoList = memoRepository.findMemoList(member,pageable);
 
-        List<String> getMemoList = memoRepository.findMemoListByPhoneNumber(myPhoneNumber,yourPhoneNumber);
+        if(getMemoList.getContent().size() == 0) throw new CommonException(CommonErrorCode.NOT_FOUND_MEDIA_FILES);
 
-        if(getMemoList.size() == 0) throw new MemoException(MemoErrorCode.NOT_FOUND_MEMO);
-
-        List<Map<String,String>> resultList = new ArrayList<>();
-        for (String memo : getMemoList) {
-            String[] parts = memo.split(",");
-            Map<String, String> memoMap = new HashMap<>();
-            memoMap.put("memo_id", parts[0]);
-            memoMap.put("content", parts[1]);
+        List<Map<String,Object>> resultList = new ArrayList<>();
+        for (Tuple tuple : getMemoList) {
+            Map<String, Object> memoMap = new HashMap<>();
+            memoMap.put("memo_id", tuple.get(0, Long.class));
+            memoMap.put("content",tuple.get(1,String.class));
+            memoMap.put("created_AT",tuple.get(2,LocalDateTime.class));
             resultList.add(memoMap);
         }
-        return resultList;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("content", resultList);
+        result.put("number", getMemoList.getNumber());
+        result.put("size", getMemoList.getSize());
+        result.put("totalPages", getMemoList.getTotalPages());
+        result.put("hasPrevious", getMemoList.hasPrevious());
+        result.put("hasNext", getMemoList.hasNext());
+
+
+        return result;
 
     }
 

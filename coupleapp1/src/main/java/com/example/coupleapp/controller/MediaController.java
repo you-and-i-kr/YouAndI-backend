@@ -53,9 +53,10 @@ public class MediaController {
 
     @GetMapping()
     @ApiOperation(value = "저장한 미디어들 불러오기")
-    public ResponseEntity<?> getMedias(){
-        Long memberId = AuthHolder.getMemberId();
-        return ResponseEntity.ok(mediaService.getMediaList(memberId));
+    public Map<String,Object>  getMedias(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "20") int pageSize){
+        return mediaService.getMediaList(pageNumber,pageSize);
     }
 
     // 미디어 메타데이터 업데이트

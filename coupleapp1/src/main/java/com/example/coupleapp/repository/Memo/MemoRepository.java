@@ -1,4 +1,4 @@
-package com.example.coupleapp.repository;
+package com.example.coupleapp.repository.Memo;
 
 import com.example.coupleapp.entity.MemoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,10 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MemoRepository extends JpaRepository<MemoEntity, Long> {
+public interface MemoRepository extends JpaRepository<MemoEntity, Long> , MemoRepositoryCustom {
 
     @Query("select m.id,m.memoContent from MemoEntity m where m.myPhoneNumber = :myPhoneNumber or m.myPhoneNumber = :yourPhoneNumber")
     List<String> findMemoListByPhoneNumber(@Param("myPhoneNumber")String myPhoneNumber,@Param("yourPhoneNumber") String yourPhoneNumber);
 
-//    MemoEntity findByMemberAndMemoId(Long memberId, Long memoId);
 }

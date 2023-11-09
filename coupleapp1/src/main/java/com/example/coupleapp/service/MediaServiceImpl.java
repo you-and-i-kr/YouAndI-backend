@@ -6,22 +6,27 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.example.coupleapp.dto.MediaDTO;
 import com.example.coupleapp.entity.MediaEntity;
 import com.example.coupleapp.entity.MemberEntity;
+import com.example.coupleapp.exception.domian.CommonErrorCode;
+import com.example.coupleapp.exception.domian.CommonException;
 import com.example.coupleapp.exception.domian.MediaErrorCode;
 import com.example.coupleapp.exception.domian.MediaException;
-import com.example.coupleapp.repository.MediaRepository;
+import com.example.coupleapp.repository.Media.MediaRepository;
 import com.example.coupleapp.repository.Member.MemberRepository;
+import com.example.coupleapp.security.AuthHolder;
+import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalTime;
+import java.util.*;
 
 @Service
 public class MediaServiceImpl implements MediaService {
@@ -82,24 +87,35 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public List<Map<String,String>> getMediaList(Long memberId) {
-
+    public Map<String,Object> getMediaList(int pageNumber, int pageSize) {
+        Long memberId = AuthHolder.getMemberId();
         MemberEntity member = memberRepository.findMemberById(memberId);
-        String myPhoneNum = member.getMy_phone_number();
-        String yourPhoneNum = member.getYour_phone_number();
-        List<String> getMediaList = mediaRepository.findMedialist(myPhoneNum,yourPhoneNum);
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
 
-        if(getMediaList.size() == 0) throw new MediaException(MediaErrorCode.NOT_FOUND_FILE);
+        Page<Tuple> getMediaList = mediaRepository.findMediaList(member,pageable);
 
-        List<Map<String,String>> resultList = new ArrayList<>();
-        for (String media : getMediaList) {
-            String[] parts = media.split(",");
-            Map<String, String> mediaMap = new HashMap<>();
-            mediaMap.put("media_id", parts[0]);
-            mediaMap.put("url", parts[1]);
+        if(getMediaList.getContent().size() == 0) throw new CommonException(CommonErrorCode.FAIL_TO_UPDATE);
+
+        List<Map<String,Object>> resultList = new ArrayList<>();
+        for (Tuple tuple: getMediaList) {
+            Map<String, Object> mediaMap = new HashMap<>();
+            mediaMap.put("media_id", tuple.get(0, Long.class));
+            mediaMap.put("media_url", tuple.get(1, String.class));
+            mediaMap.put("created_At", tuple.get(2, LocalTime.class));
             resultList.add(mediaMap);
         }
-        return resultList;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("content", resultList);
+        result.put("number", getMediaList.getNumber());
+        result.put("size", getMediaList.getSize());
+        result.put("totalPages", getMediaList.getTotalPages());
+        result.put("hasPrevious", getMediaList.hasPrevious());
+        result.put("hasNext", getMediaList.hasNext());
+
+
+
+        return result;
     }
 
     @Override

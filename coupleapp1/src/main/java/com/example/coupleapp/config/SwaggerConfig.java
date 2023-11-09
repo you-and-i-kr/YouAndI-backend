@@ -75,8 +75,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Couple API Documentation")
-                .description("couple API description")
+                .title("coupleApp")
+                .description("coupleApp API 입니다.")
                 .version("1.0")
                 .build();
     }

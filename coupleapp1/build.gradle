@@ -71,6 +71,11 @@ dependencies {
 //    implementation 'org.springframework:spring-messaging:6.0.3'
 //    implementation 'org.springframework.security:spring-security-messaging:6.0.2'
 
+    // Test
+
+    implementation 'org.openjdk.jmh:jmh-core:1.33'
+
+
 }
 
 jar{

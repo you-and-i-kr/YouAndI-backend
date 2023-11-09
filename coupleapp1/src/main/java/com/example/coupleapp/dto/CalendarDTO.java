@@ -1,16 +1,17 @@
 package com.example.coupleapp.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+
 @Data
 public class CalendarDTO {
-    private Long calendarId;
-    private Long memberId;
+    @ApiModelProperty(example = "100일")
     private String title;
+    @ApiModelProperty(example = "늦으면 죽어~")
     private String memo;
-    private Timestamp startDate;
-    private Timestamp endDate;
-
-    // Getters and setters (You can use Lombok for this)
+    @ApiModelProperty(example = "2023-11-20")
+    private LocalDate created_At;
 }

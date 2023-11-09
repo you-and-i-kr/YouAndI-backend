@@ -1,78 +1,51 @@
-//package com.example.coupleapp.controller;
-//
-//import com.example.coupleapp.dto.CalendarDTO;
-//import com.example.coupleapp.service.CalendarService;
-//import io.swagger.annotations.*;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//
-//@RestController
-//@RequestMapping("/calendars")
-//@Api(value = "Calendar Controller", description = "Operations pertaining to calendars")
-//public class CalendarController {
-//    private final CalendarService calendarService;
-//
-//    @Autowired
-//    public CalendarController(CalendarService calendarService) {
-//        this.calendarService = calendarService;
-//    }
-//
-//    @GetMapping("/{id}")
-//    @ApiOperation(value = "Get a calendar by ID", response = CalendarDTO.class)
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "Successfully retrieved calendar by ID"),
-//            @ApiResponse(code = 404, message = "Calendar not found")
-//    })
-//    public ResponseEntity<CalendarDTO> getCalendar(
-//            @ApiParam(value = "ID of the calendar", required = true) @PathVariable Long id) {
-//        CalendarDTO calendarDTO = calendarService.getCalendarById(id);
-//        if (calendarDTO != null) {
-//            return ResponseEntity.ok(calendarDTO);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
-//
-//    @PostMapping
-//    @ApiOperation(value = "Create a new calendar", response = CalendarDTO.class)
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 201, message = "Calendar created successfully"),
-//            @ApiResponse(code = 400, message = "Invalid input")
-//    })
-//    public ResponseEntity<CalendarDTO> createCalendar(
-//            @ApiParam(value = "Calendar data", required = true) @RequestBody CalendarDTO calendarDTO) {
-//        CalendarDTO createdCalendarDTO = calendarService.createCalendar(calendarDTO);
-//        return ResponseEntity.ok(createdCalendarDTO);
-//    }
-//
-//    @PutMapping("/{id}")
-//    @ApiOperation(value = "Update a calendar by ID", response = CalendarDTO.class)
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "Successfully updated calendar by ID"),
-//            @ApiResponse(code = 404, message = "Calendar not found"),
-//            @ApiResponse(code = 400, message = "Invalid input")
-//    })
-//    public ResponseEntity<CalendarDTO> updateCalendar(
-//            @ApiParam(value = "ID of the calendar", required = true) @PathVariable Long id,
-//            @ApiParam(value = "Updated calendar data", required = true) @RequestBody CalendarDTO calendarDTO) {
-//        CalendarDTO updatedCalendarDTO = calendarService.updateCalendar(id, calendarDTO);
-//        if (updatedCalendarDTO != null) {
-//            return ResponseEntity.ok(updatedCalendarDTO);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    @ApiOperation(value = "Delete a calendar by ID")
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 204, message = "Calendar deleted successfully"),
-//            @ApiResponse(code = 404, message = "Calendar not found")
-//    })
-//    public ResponseEntity<Void> deleteCalendar(
-//            @ApiParam(value = "ID of the calendar", required = true) @PathVariable Long id) {
-//        calendarService.deleteCalendar(id);
-//        return ResponseEntity.noContent().build();
-//    }
-//}
+package com.example.coupleapp.controller;
+
+import com.amazonaws.http.apache.utils.ApacheUtils;
+import com.example.coupleapp.dto.CalendarDTO;
+import com.example.coupleapp.dto.CalendarUpdateDTO;
+import com.example.coupleapp.service.CalendarService;
+import io.swagger.annotations.*;
+import lombok.Generated;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
+import java.util.Map;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/calendars")
+@Api(tags = "달력 API")
+public class CalendarController {
+
+    final private CalendarService calendarService;
+    @ApiOperation(value = "원하는 날짜에 title 과 memo 생성")
+    @PostMapping
+    public Long create(@RequestBody CalendarDTO calendarDTO) {
+        return calendarService.create(calendarDTO);
+    }
+
+    @ApiOperation(value = "월에 저장된 날짜 별 데이터 모두 불러오기")
+    @GetMapping("/{month}")
+    @ApiImplicitParam(name = "month",example = "2023-11")
+    public List<Map<String, String>> getAllTitle(@PathVariable @DateTimeFormat(pattern = "yyyy-MM") YearMonth month) {
+        return calendarService.getAllTitle(month);
+    }
+
+    @ApiOperation(value = "날짜에 해당하는 데이터 변경")
+    @PutMapping("/update")
+    public String update(@RequestBody CalendarUpdateDTO calendarUpdateDTO) {
+        return calendarService.update(calendarUpdateDTO);
+    }
+
+    @ApiOperation(value = "날짜에 해당하는 데이터 삭제")
+    @DeleteMapping("/delete/{calendar_id}")
+    public String delete(@PathVariable Long calendar_id){
+        return calendarService.delete(calendar_id);
+    }
+}

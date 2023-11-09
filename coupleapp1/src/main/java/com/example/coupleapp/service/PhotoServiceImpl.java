@@ -74,15 +74,17 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public Page<Map<String, String>> getPhotoById(Long memberId, Pageable pageable) {
+    public Map<String, Object> getPhotoById(Long memberId, int pageNumber,int pageSize) {
 
         MemberEntity member = memberRepository.findMemberById(memberId);
         String myPhoneNum = member.getMy_phone_number();
         String yourPhoneNum = member.getYour_phone_number();
 
-        List<Tuple> getPhotoList = photoRepository.findimglist(myPhoneNum,yourPhoneNum,pageable);
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
 
-        if(getPhotoList.size() == 0) throw new PhotoException(PhotoErrorCode.NOT_FOUND_PHOTO);
+        Page<Tuple> getPhotoList = photoRepository.findimglist(myPhoneNum,yourPhoneNum,pageable);
+
+        if(getPhotoList.getContent().size() == 0) throw new PhotoException(PhotoErrorCode.NOT_FOUND_PHOTO);
 
         List<Map<String, String>> resultList = new ArrayList<>();
         for(Tuple tuple : getPhotoList){
@@ -92,9 +94,17 @@ public class PhotoServiceImpl implements PhotoService {
             resultList.add(photoMap);
         }
 
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        Map<String, Object> result = new HashMap<>();
 
-        return new PageImpl<>(resultList, pageRequest, resultList.size());
+        result.put("content", resultList);
+        result.put("number", getPhotoList.getNumber());
+        result.put("size", getPhotoList.getSize());
+        result.put("totalPages", getPhotoList.getTotalPages());
+        result.put("hasPrevious", getPhotoList.hasPrevious());
+        result.put("hasNext", getPhotoList.hasNext());
+
+
+        return result;
 
 //        List<Map<String,String>> resultList = new ArrayList<>();
 //        for (String memo : getPhotoList) {

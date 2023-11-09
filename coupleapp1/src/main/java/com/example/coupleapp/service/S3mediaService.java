@@ -7,7 +7,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.coupleapp.config.S3Config;
 import com.example.coupleapp.exception.domian.CommonErrorCode;
 import com.example.coupleapp.exception.domian.CommonException;
-import com.example.coupleapp.repository.MediaRepository;
+import com.example.coupleapp.repository.Media.MediaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

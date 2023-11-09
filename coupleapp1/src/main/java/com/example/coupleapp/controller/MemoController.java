@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/memos")
@@ -35,9 +36,10 @@ public class MemoController {
 
     @GetMapping
     @ApiOperation(value = "저장된 메모 가져오기")
-    public ResponseEntity<?> getMemos(){
+    public Map<String,Object> getMemos(@RequestParam(defaultValue = "0") int pageNumber,
+                                       @RequestParam(defaultValue = "20") int pageSize){
         Long memberId = AuthHolder.getMemberId();
-        return ResponseEntity.ok().body(memoService.getMemos(memberId));
+        return memoService.getMemos(memberId,pageNumber,pageSize);
     }
 
     // 특정 ID에 해당하는 메모 가져오기

@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/photos")
@@ -53,9 +54,10 @@ public class PhotoController {
     // 멤버 ID에 해당하는 사진 가져오기
     @GetMapping
     @ApiOperation(value = "저장한 사진들 불러오기")
-    public ResponseEntity<?> getPhoto(@PageableDefault(size = 20)Pageable pageable) {
+    public Map<String, Object> getPhoto( @RequestParam(defaultValue = "0") int pageNumber,
+                                         @RequestParam(defaultValue = "20") int pageSize) {
         Long memberId = AuthHolder.getMemberId();
-        return ResponseEntity.ok(photoService.getPhotoById(memberId,pageable));
+        return photoService.getPhotoById(memberId,pageNumber,pageSize);
     }
 
     // 사진 메타데이터 업데이트

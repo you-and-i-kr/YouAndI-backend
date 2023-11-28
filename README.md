@@ -55,4 +55,4 @@ you-and-i 게시판.
 
 <br>
 ## 💻 ERD
-<img width="500" alt="스크린샷 2023-08-24 오전 5 32 07" src="https://dbdiagram.io/d/Copy-of-couple-APP-651bbe24ffbf5169f0eb0b00">
+<img width="500" src="https://dbdiagram.io/d/Copy-of-couple-APP-651bbe24ffbf5169f0eb0b00">

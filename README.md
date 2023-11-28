@@ -25,7 +25,7 @@ you-and-i 게시판.
 - Spring JPA
 - Spring Logging
 - PostMan(Test)
-- API SWAGGER 
+- API Swagger
 
 <br>
 
@@ -55,4 +55,4 @@ you-and-i 게시판.
 
 <br>
 ## 💻 ERD
-<img width="500" src="https://dbdiagram.io/d/Copy-of-couple-APP-651bbe24ffbf5169f0eb0b00">
+<img width="500" src="https://www.notion.so/YOU-AND-I-a3dc1d0097834928b6bb2efba4078fa4?pvs=4#4a29a0f0f02b4d6eb6852298e87ff8cc">

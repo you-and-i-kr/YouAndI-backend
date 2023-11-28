@@ -4,7 +4,7 @@
 <br>
 ## 🖥️ 프로젝트 : 
 you-and-i 게시판.
-지난 4주간 배운 JAVA, DB를 바탕으로 실제 백엔드 애플리케이션을 직접 만들어본다.
+커플 웹사이트를 만들어 보자
 
 ## 🕰️ 개발 기간
 * 23.10 ~ 23.11 (1개월) 
@@ -55,4 +55,4 @@ you-and-i 게시판.
 
 <br>
 ## 💻 ERD
-<img width="500" src="./https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fc27f3000-ce10-4e06-a363-d9d84c328aca%2F0e60a02b-06fe-4533-bf66-035374e1c6bd%2FCopy_of_couple_APP.png?table=block&id=4a29a0f0-f02b-4d6e-b685-2298e87ff8cc&spaceId=c27f3000-ce10-4e06-a363-d9d84c328aca&width=2000&userId=6b153e17-753c-4fc4-a1e8-43f578f22d24&cache=v2">
+<img width="500" src="">

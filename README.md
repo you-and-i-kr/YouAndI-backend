@@ -55,4 +55,4 @@ you-and-i 게시판.
 
 <br>
 ## 💻 ERD
-<img width="500" src="![image](https://github.com/you-and-i-kr/youandi-backend/assets/93518184/775195b4-f356-4271-8db2-2f8b60488ee4)">
+![image](https://github.com/you-and-i-kr/youandi-backend/assets/93518184/775195b4-f356-4271-8db2-2f8b60488ee4)
